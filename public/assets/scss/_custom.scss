@@ -1,0 +1,124 @@
+.theme-blue {
+	.navbar.navbar-default {
+		background-color: $color-menu; 
+	}
+	.sidebar .sidebar-nav .metismenu li.active a {
+		border-color: $color-menu;
+		background-color: $color-menu-bg;
+	}
+}
+span.hour {
+	font-weight:bold;
+}
+.fc-day-grid-event .fc-content {
+	white-space: normal !important;
+}
+th.fc-sat, th.fc-sun {
+	background-color:#EEE;
+}
+td.fc-sat, td.fc-sun {
+	background-color:#F6F6F6;
+}
+.dashboard-cal .fc-today {
+  background: #FFF !important; 
+}
+.user-image img {
+	height:100px;
+	width:auto;
+}
+#header-notifications-list li.unread * {
+	font-weight:bold;
+}
+#header-alerts-list li.unread h4 {
+	font-weight:bold;
+}
+li.notification i.material-icons {
+	font-size:24px !important;
+	font-weight:normal !important;
+}
+tr.weekend {
+	background-color:#F6F6F3;
+}
+ul.sub-list {
+	list-style-type:none;
+	padding:0;
+	margin:0;
+}
+a {
+	.half_day_pm {
+		width:45%;
+		float:right;
+	}
+	.half_day_am {
+		width:45%;
+	}
+}
+.cal-holiday {
+	background-color:$color-success !important;
+	color:#FFF;
+	position:relative;
+}
+.cal-holiday .icon::after,
+.fc-event.cal-holiday::after 
+{
+	font-family: FontAwesome;
+	content: "\f072";
+	position: absolute;
+	right: 5px;
+	top: 0;
+	font-size: 16px;
+}
+.cal-sickness {
+	background-color:$color-danger !important;
+	color:#FFF;
+	position:relative;
+}
+.cal-sickness .icon::after,
+.fc-sickness.cal-holiday::after
+{
+	font-family: FontAwesome;
+	content: "\f0f9";
+	position: absolute;
+	right: 5px;
+	top: 0;
+	font-size: 16px;
+}
+hr.divider {
+	border-top: 3px solid #E7EBEE;
+	margin-left: -15px;
+	margin-right: -15px;
+}
+td.absence {
+	background-color:#F5EFEF;
+}
+li.menu-separator {
+	height:1px;
+	border-left: 3px solid $color-menu;
+}
+li.absence {
+	border-radius:5px;
+	padding:2px 25px 2px 4px;
+	margin:2px 0;
+	a {
+		color:#FFF;
+		opacity:0.5;
+		margin-left: 8px;
+		&:hover {
+			opacity:1;
+		}
+	}
+}
+h1.error {
+	padding:20px;
+	color:#F00;
+	text-align:center;
+}
+.ms-container .ms-selectable li.ms-elem-selectable,
+.ms-container .ms-selection li.ms-elem-selection{
+  font-size: 10px !important;
+}
+.profile-image img:hover {
+	background-color: #CCC;
+	border-color: transparent !important;
+	cursor: pointer;
+}

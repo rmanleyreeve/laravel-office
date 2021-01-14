@@ -1,0 +1,66 @@
+﻿.form-group {
+    label {
+        font-size: 13px;
+        color: #666;
+        font-weight: 600;
+
+        &.error {
+            margin-top: 5px;
+            font-size: 12px;
+            color: $color-danger;
+            font-weight: bold;
+        }
+    }
+
+    .help-info {
+        float: right;
+        font-size: 12px;
+        margin-top: 5px;
+        color: #999;
+    }
+
+    &.has-error {
+        &.with-label {
+            label {
+                &:first-child {
+                    color: $color-danger;
+                }
+            }
+        }
+
+        .form-control {
+            border-color: $color-danger;
+            @include box-shadow(none);
+        }
+    }
+
+    &.has-warning {
+        &.with-label {
+            label {
+                &:first-child {
+                    color: $color-warning;
+                }
+            }
+        }
+
+        .form-control {
+            border-color: $color-warning;
+            @include box-shadow(none);
+        }
+    }
+
+    &.has-success {
+        &.with-label {
+            label {
+                &:first-child {
+                    color: $color-success;
+                }
+            }
+        }
+
+        .form-control {
+            border-color: $color-success;
+            @include box-shadow(none);
+        }
+    }
+}

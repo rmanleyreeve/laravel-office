@@ -1,0 +1,54 @@
+﻿$body_background-color: #E7EBEE;
+$body_font-family: "Oxygen", Arial, Tahoma, sans-serif;
+
+/* General Colors */
+$color-danger: #DA4453;
+$color-info: #01C0C8;
+$color-success: #16a085;
+$color-primary: #2980b9;
+$color-warning: #f6b225;
+$color-default: #bdc3c6;
+$color-menu: #2992A7;
+$color-menu-bg: #3a424d;
+$theme-default: #009688;
+
+/* Pagination */
+$active-bg-color: $color-success;
+
+/* Input */
+$input_font-size: 13px;
+$input_border-hover-color: $color-success;
+
+/* Bootstrap Select */
+$bootstrapselect_border-active-color: $color-info;
+
+/* Panel */
+$panel_body_main-color: #666;
+$panel_body_main-font-size: 13px;
+$panel_body_line-height: 22px;
+$panel_body-h3-font-weight: 600;
+$panel_body-h3-font-size: 15px;
+$panel-border: 1px solid #e5e5e5;
+$panel-border-radius: 4px;
+
+/* Buttons */
+$btn-default_bg-color: #fff;
+$btn-default_border-color: #ddd;
+
+$btn-danger_bg-color: $color-danger;
+$btn-danger_border-color: $color-danger;
+
+$btn-warning_bg-color: $color-warning;
+$btn-warning_border-color: $color-warning;
+
+$btn-info_bg-color: $color-info;
+$btn-info_border-color: $color-info;
+
+$btn-success_bg-color: $color-success;
+$btn-success_border-color: $color-success;
+
+$btn-primary_bg-color: $color-primary;
+$btn-primary_border-color: $color-primary;
+
+$btn-link_forecolor: #666;
+$btn-link_hover-forecolor: $color-info;

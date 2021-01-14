@@ -1,0 +1,34 @@
+php:
+  risky: true
+  version: 7
+  preset: laravel
+  disabled:
+    - no_unused_imports
+  finder:
+    exclude:
+      - "node_modules"
+      - "storage"
+      - "vendor"
+  name: "*.php"
+  not-path:
+    - "resources"
+  not-name:
+    - "*.blade.php"
+    - "index.php"
+    - "server.php"
+js:
+  finder:
+    exclude:
+      - "modules"
+      - "node_modules"
+      - "storage"
+      - "vendor"
+    not-path:
+      - "public/js/vendor"
+      - "resources"
+    name:
+      - "*.js"
+      - "*.jsx"
+    not-name:
+      - "*.min.js"
+css: true
