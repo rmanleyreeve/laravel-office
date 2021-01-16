@@ -70,10 +70,10 @@ class AppFuncsProvider {
         if($day_activity_log && 'ENTRY' == reset($day_activity_log)['activity'] && 'EXIT' == end($day_activity_log)['activity']) {
             foreach($day_activity_log as $i=>$e) {
                 if('ENTRY' == $e['activity']) {
-                    if($day_activity_log[$i-1]) { // previous exit
-                        $t_out = strtotime($day_activity_log[$i-1]['time_logged']);
-                        $t_in = strtotime($e['time_logged']);
-                        $mins_break += ceil(($t_in - $t_out)/60);
+                    if (isset($day_activity_log[$i-1])) { // previous exit
+                        $t_out=strtotime($day_activity_log[$i-1]['time_logged']);
+                        $t_in=strtotime($e['time_logged']);
+                        $mins_break+=ceil(($t_in-$t_out)/60);
                     }
                 }
             }

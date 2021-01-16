@@ -10,22 +10,28 @@ use App\Providers\AppFuncsProvider as Funcs;
 
 class AjaxController extends Controller
 {
-    public function getDashboardAttendance(Request $request) {
-        if (!Session::get('user_id') || !Funcs::_up('ATTENDANCE')) { die("{}"); }
-        $start = date('Y-m-d 00:00:00');
-        $end = date('Y-m-d 23:59:59');
-        $res = DB::table('employees AS e')
-            ->leftJoin('activity_log AS al','al.employee_fk','=','e.uid')
-            ->where('e.active','=',true)
-            ->where('e.deleted','=',false)
-            ->whereBetween('al.time_logged',[$start,$end])
-            ->select('e.uid','e.firstname','e.surname','e.role','al.time_logged','al.activity')
+    public function getDashboardAttendance() {
+        if (!Session::get('user_id') || !Funcs::_up('ATTENDANCE')) {
+            die("{}");
+        }
+        $start=date('Y-m-d 00:00:00');
+        $end=date('Y-m-d 23:59:59');
+        $res=DB::table('employees AS e')
+            ->leftJoin('activity_log AS al',function($join) use ($start,$end) {
+                $join->on('al.employee_fk','e.uid')
+                    ->whereBetween('al.time_logged',[$start,$end]);
+            })
+            ->where('e.active','=',TRUE)
+            ->where('e.deleted','=',FALSE)
+            ->select('e.uid','e.firstname','e.surname','e.role','al.time_logged',
+                'al.activity')
             ->selectRaw('TIME(al.time_logged) AS time')
             ->orderBy('e.surname')
             ->orderBy('e.firstname')
             ->orderBy('al.time_logged')
             ->get()
             ->toArray();
+        //var_dump($res); exit;
         $recordset = [];
         $c=0;
         foreach($res as $r) {
@@ -43,14 +49,16 @@ class AjaxController extends Controller
             ->header('Access-Control-Allow-Origin', '*');
     }
 
-    public function getNotifications(Request $request) {
-        if (!Session::get('user_id') || !Funcs::_up('ATTENDANCE')) { die("{}"); }
-        $start = date('Y-m-d 00:00:00');
-        $end = date('Y-m-d 23:59:59');
-        $recordset = DB::table('activity_log AS al')
+    public function getNotifications() {
+        if (!Session::get('user_id') || !Funcs::_up('ATTENDANCE')) {
+            die("{}");
+        }
+        $start=date('Y-m-d 00:00:00');
+        $end=date('Y-m-d 23:59:59');
+        $recordset=DB::table('activity_log AS al')
             ->join('employees AS e','e.uid','=','al.employee_fk')
-            ->where('e.active','=',true)
-            ->where('e.deleted','=',false)
+            ->where('e.active','=',TRUE)
+            ->where('e.deleted','=',FALSE)
             ->whereBetween('al.time_logged',[$start,$end])
             ->select(
                 'al.uid','al.time_logged','al.activity','al.notification_read',
@@ -77,22 +85,26 @@ class AjaxController extends Controller
         return response('OK');
     }
 
-    public function countNotifications(Request $request) {
-        if (!Session::get('user_id') || !Funcs::_up('ATTENDANCE')) { die(""); }
-        $c = Session::get('notification_count') ?? '"0"';
-        $content = '{ "count":' . $c . ' }';
+    public function countNotifications() {
+        if (!Session::get('user_id') || !Funcs::_up('ATTENDANCE')) {
+            die("");
+        }
+        $c=Session::get('notification_count') ?? '"0"';
+        $content='{ "count":'.$c.' }';
         return response($content)
-            ->header('Content-Type', 'application/json; charset=utf-8')
-            ->header('Access-Control-Allow-Origin', '*');
+            ->header('Content-Type','application/json; charset=utf-8')
+            ->header('Access-Control-Allow-Origin','*');
     }
 
-    public function getAlerts(Request $request) {
-        if (!Session::get('user_id') || !Funcs::_up('ATTENDANCE')) { die("{}"); }
-        $res = DB::table('activity_log AS al')
+    public function getAlerts() {
+        if (!Session::get('user_id') || !Funcs::_up('ATTENDANCE')) {
+            die("{}");
+        }
+        $res=DB::table('activity_log AS al')
             ->join('employees AS e','e.uid','=','al.employee_fk')
-            ->where('e.active','=',true)
-            ->where('e.deleted','=',false)
-            ->where('al.time_logged','<', date('Y-m-d'))
+            ->where('e.active','=',TRUE)
+            ->where('e.deleted','=',FALSE)
+            ->where('al.time_logged','<',date('Y-m-d'))
             ->select('al.time_logged','al.activity','e.uid','e.firstname','e.surname')
             ->selectRaw('DATE(al.time_logged) AS day,TIME(al.time_logged) AS clock_time')
             ->orderBy('al.time_logged')
@@ -124,15 +136,20 @@ class AjaxController extends Controller
             ->header('Access-Control-Allow-Origin', '*');
     }
 
-    public function getData(Request $request) {
-        if (!Session::get('user_id')) { return redirect('/'); }
-        $start = date('Y-m-d 00:00:00');
-        $end = date('Y-m-d 23:59:59');
-        $res = DB::table('employees AS e')
-            ->leftJoin('activity_log AS al','al.employee_fk','=','e.uid')
-            ->where('e.active','=',true)
-            ->whereBetween('al.time_logged',[$start,$end])
-            ->select('e.uid','e.firstname','e.surname','e.role','al.time_logged','al.activity')
+    public function getData() {
+        if (!Session::get('user_id')) {
+            return redirect('/');
+        }
+        $start=date('Y-m-d 00:00:00');
+        $end=date('Y-m-d 23:59:59');
+        $res=DB::table('employees AS e')
+            ->leftJoin('activity_log AS al',function($join) use ($start,$end) {
+                $join->on('al.employee_fk','e.uid')
+                    ->whereBetween('al.time_logged',[$start,$end]);
+            })
+            ->where('e.active','=',TRUE)
+            ->select('e.uid','e.firstname','e.surname','e.role','al.time_logged',
+                'al.activity')
             ->orderBy('e.surname')
             ->orderBy('e.firstname')
             ->orderBy('al.time_logged')
@@ -161,13 +178,15 @@ class AjaxController extends Controller
         return response($content);
     }
 
-    public function checkAttendance(Request $request) {
-        if (!Session::get('user_id') || !Funcs::_up('ADMIN')) { die('{}'); }
-        $res = DB::table('activity_log AS al')
+    public function checkAttendance() {
+        if (!Session::get('user_id') || !Funcs::_up('ADMIN')) {
+            die('{}');
+        }
+        $res=DB::table('activity_log AS al')
             ->join('employees AS e','e.uid','=','al.employee_fk')
-            ->where('al.time_logged','<', date('Y-m-d'))
-            ->where('e.active','=',true)
-            ->where('e.deleted','=',false)
+            ->where('al.time_logged','<',date('Y-m-d'))
+            ->where('e.active','=',TRUE)
+            ->where('e.deleted','=',FALSE)
             ->select('al.time_logged','al.activity','e.uid','e.firstname','e.surname')
             ->selectRaw('DATE(al.time_logged) AS day,TIME(al.time_logged) AS clock_time')
             ->orderBy('al.time_logged')

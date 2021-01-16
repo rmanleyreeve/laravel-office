@@ -646,7 +646,7 @@
         el = document.getElementById(el);
 
       // Does nothing if canvas name doesn't exists
-      if(el === null || el === undefined)
+      if(el === null)
         return;
 
       draw = this._determineDrawingFunction(draw);

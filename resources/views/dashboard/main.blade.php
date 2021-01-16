@@ -1,4 +1,3 @@
-<x-master>
 <section class="content">
 
 	<div class="page-heading">
@@ -97,7 +96,7 @@ foreach($days as $i=>$d) {
 	$n = substr($d,0,3);
 	$vals = array();
 	foreach($data as $dd) {
-		$vals[] = round(calcMinsPresent($dd[$d])/60,2);
+		$vals[] = round($funcs->calcMinsPresent($dd[$d])/60,2);
 	}
 ?>
 					{ label:"{{ $d }}", backgroundColor:"{{ $barchart_colours[$n] }}", data: {{ json_encode($vals) }} },
@@ -110,7 +109,7 @@ foreach($days as $i=>$d) {
 				scales: {
 					xAxes: [{
 						type: 'category',
-						labels: <?php echo json_encode(array_keys($data));?>,
+						labels: {!! json_encode(array_keys($data)) !!},
 						stacked: false,
 						ticks: {stepSize:1,min:0,autoSkip:false},
 					}],
@@ -141,7 +140,8 @@ foreach($days as $i=>$d) {
 	function handleClick(evt){
 		var activeElement = chart.getElementAtEvent(evt);
 		var date = chart.config.data.datasets[activeElement[0]._datasetIndex].label;
-		var d = moment(date+' {{ date('Y') }}','ddd D MMM YYYY').format('YYYY-MM-DD');
+		var d = moment(date,'ddd D MMM YYYY').format('YYYY-MM-DD');
+		console.log(d);
 		var n = chart.config.options.scales.xAxes[0].labels[activeElement[0]._index];
 		var uid = employees[n];
 		//console.log(d, uid);
@@ -245,7 +245,7 @@ foreach($days as $i=>$d) {
 
 	// calendar
 	$('#calendar').fullCalendar({
-		events:  {!! json_encode($events) !!},
+		events: {!! json_encode($events) !!},
 		defaultView: 'basic',
 		dayOfMonthFormat: 'ddd D MMM',
 		weekends: false,
@@ -275,4 +275,3 @@ foreach($days as $i=>$d) {
 
 });
 </script>
-</x-master>

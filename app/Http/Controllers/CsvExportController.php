@@ -3,20 +3,19 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Routing\Controller;
-use Illuminate\Http\Request;
 
 class CsvExportController extends Controller
 {
-    public function export(Request $request, $fields=[], $recordset=[]) {
+    public function export($fields=[],$recordset=[]) {
         // takes 2 params, $fields (array of column names) and $recordset (array of column values)
-        $headings = str_replace('_FK','',strtoupper(implode(',',$fields)));
-        $csv = "{$headings}\n";
-        $find = array("\r\n","\n","\r","\t",'"',"&quot;");
-        $replace = array(' ',' ',' ',' ',"'","'");
-        $unique = array();
-        foreach($recordset as $k=>$item) {
-            foreach($fields as $f) {
-                $unique[$k][$f] = $item[$f];
+        $headings=str_replace('_FK','',strtoupper(implode(',',$fields)));
+        $csv="{$headings}\n";
+        $find=array("\r\n","\n","\r","\t",'"',"&quot;");
+        $replace=array(' ',' ',' ',' ',"'","'");
+        $unique=array();
+        foreach ($recordset as $k=>$item) {
+            foreach ($fields as $f) {
+                $unique[$k][$f]=$item[$f];
             }
         }
         foreach($unique as $item) {

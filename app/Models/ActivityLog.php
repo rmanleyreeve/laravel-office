@@ -9,7 +9,8 @@ class ActivityLog extends Model
 {
     use HasFactory;
 
-    protected $primaryKey = 'uid';
+    protected $table='activity_log';
+    protected $primaryKey='uid';
 
     public function employee()
     {
