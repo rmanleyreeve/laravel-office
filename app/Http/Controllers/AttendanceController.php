@@ -13,6 +13,7 @@ use App\Providers\AppFuncsProvider as Funcs;
 
 
 class AttendanceController extends Controller {
+
     public function getDailyActivity($date,$id) {
         if (!Session::get('user_id') || !Funcs::_up('ATTENDANCE')) {
             abort(403);

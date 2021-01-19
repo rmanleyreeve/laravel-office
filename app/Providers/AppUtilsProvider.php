@@ -242,7 +242,7 @@ class AppUtilsProvider {
         return $str;
     }
     public function hl($str){
-        if($_GET['s'] && stripos($str,$_GET['s'])!==false) {
+        if(isset($_GET['s']) && stripos($str,$_GET['s'])!==false) {
             $needle = trim($_GET['s']);
             $str = preg_replace("/($needle)/i", '<span class="highlight">$1</span>', $str);
         }

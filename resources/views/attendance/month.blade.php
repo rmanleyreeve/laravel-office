@@ -58,7 +58,7 @@ function next_month_url($ms){
                                         @endisset
 									    <td>
                                             <?php
-                                            echo $n;
+                                            //echo $n;
                                             $present = $funcs->calcMinsPresent($data[$n][$d]);
                                             $break = $funcs->calcMinsBreak($data[$n][$d]);
                                             $total = ($present + $break);

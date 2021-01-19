@@ -85,8 +85,8 @@
                         $(this).parents('li').addClass('active');
                         $(this).parent().removeClass('active');
                         return false;
+                    }
                 });
-
             });
         </script>
 	</head>

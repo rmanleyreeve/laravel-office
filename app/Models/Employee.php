@@ -10,6 +10,9 @@ class Employee extends Model
     use HasFactory;
 
     protected $primaryKey = 'uid';
+    protected $guarded = [
+        'created_at'
+    ];
 
     public function absences()
     {

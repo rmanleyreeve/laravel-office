@@ -11,6 +11,9 @@ class ActivityLog extends Model
 
     protected $table='activity_log';
     protected $primaryKey='uid';
+    protected $guarded = [
+        'created_at'
+    ];
 
     public function employee()
     {
