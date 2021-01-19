@@ -1,6 +1,6 @@
 <div hidden id="dynamicModalTitle">Edit Profile Image</div>
 
-<form class="form-horizontal validate" id="formAddEdit" method="post" enctype="multipart/form-data" action="/users/<?php echo $selected['user_id'];?>/image">
+<form class="form-horizontal validate" id="formAddEdit" method="post" enctype="multipart/form-data" action="/users/{{ $selected->user_id }}/image">
     @csrf
 	<div class="form-group">
 		<label class="col-sm-3 control-label">Image:</label>

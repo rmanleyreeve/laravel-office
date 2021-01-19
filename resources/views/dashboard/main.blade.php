@@ -188,8 +188,9 @@ foreach($days as $i=>$d) {
 		$('#attendance').children().remove();
 		$.each(json, function(k,r) {
 			var start=null, end=null, t1='',t2='', mins_pres=0, mins_break=0;
-			var tr = $('<tr></tr>');
-			tr.append('<td nowrap>'+r.name+' <a role="button" data-toggle="modal" data-target="#bsModal" href="/attendance/day/<?php echo date('Y-m-d');?>/'+r.uid+'/view"><i class="fa fa-clock-o" data-toggle="tooltip" data-placement="top" title="View Activity"></i></a></td>');
+			var tr = $('<tr><td></td></tr>');
+			tr.append('');
+			tr.append('<td nowrap>'+r.name+' <a role="button" data-toggle="modal" data-target="#bsModal" href="/attendance/day/{{ date('Y-m-d') }}/'+r.uid+'/view"><i class="fa fa-clock-o" data-toggle="tooltip" data-placement="top" title="View Activity"></i></a></td>');
 			tr.append('<td>'+r.role+'</td>');
 			if(r.activity_log) {
 				start = r.activity_log[0];
@@ -228,7 +229,7 @@ foreach($days as $i=>$d) {
 			tr.append('<td>'+hrs+'</td>');
 			var breaks = (mins_break) ? Math.floor(mins_break/60) +'h ' + (mins_break % 60) + 'm' : '';
 			tr.append('<td>'+breaks+'</td>');
-			tr.prepend( (r.activity_log) ? '<td><span class="pie">'+mins_pres+','+mins_break+','+(480-mins_break-mins_pres)+'</span></td>' : '<td></td>' );
+			tr.append( (r.activity_log) ? '<td><span class="pie">'+mins_pres+','+mins_break+','+(480-mins_break-mins_pres)+'</span></td>' : '<td></td>' );
 			$('#attendance').append(tr);
 			$('span.pie').peity('pie',{ fill:['#16a085','#DA4453','#ccc'] });
 			//console.log(r.name + " IN: "+mins_pres + " OUT: " + mins_break);
@@ -236,7 +237,7 @@ foreach($days as $i=>$d) {
 	}
 	// check db every 15 secs
 	checkAttendance();
-	setInterval(checkAttendance, 15000);
+	//setInterval(checkAttendance, 15000);
 
 	// display time in header bar
 	updateClock();

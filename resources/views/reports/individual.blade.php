@@ -20,9 +20,9 @@
 									<div class="input-group"><span class="input-group-addon"><i class="fa fa-user"></i></span>
 										<select class="form-control input-sm" name="uid" id="uid" required>
 											<option value="">-- Please select --</option>
-											<?php foreach($employees as $e) { ?>
-												<option value="<?php echo $e['uid'];?>"<?php select($e['uid'],$uid);?>><?php echo $e['firstname'];?> <?php echo $e['surname'];?></option>
-											<?php } ?>
+											@foreach($employees as $e)
+												<option value="{{ $e->uid }}"<?php $utils->select($e->uid,$uid);?>>{{ $e->firstname }} {{ $e->surname }}</option>
+                                            @endforeach
 										</select>
 									</div>
 								</div>
@@ -31,7 +31,7 @@
 								<label class="col-sm-2 control-label">Date From:</label>
 								<div class="col-sm-4">
 									<div class="input-group"><span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-										<input class="form-control input-sm datepicker" name="start_date" id="start_date" value="<?php echo $start_date ?? date('Y-m-d',strtotime('-1 week'));?>" required />
+										<input class="form-control input-sm datepicker" name="start_date" id="start_date" value="{{ $start_date ?? date('Y-m-d',strtotime('-1 week')) }}" required />
 									</div>
 								</div>
 							</div>
@@ -39,7 +39,7 @@
 								<label class="col-sm-2 control-label">Date To:</label>
 								<div class="col-sm-4">
 									<div class="input-group"><span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-										<input class="form-control input-sm datepicker" name="end_date" id="end_date" value="<?php echo $end_date ?? date('Y-m-d',strtotime('yesterday'));?>" required />
+										<input class="form-control input-sm datepicker" name="end_date" id="end_date" value="{{ $end_date ?? date('Y-m-d',strtotime('yesterday')) }}" required />
 									</div>
 								</div>
 							</div>
@@ -55,12 +55,12 @@
 			</div><!-- //col -->
 		</div><!-- //row -->
 
-		<?php $chart_data = array(); if($_POST) { if($data) { ?>
+		@if($posted) @if($data)
 			<div class="row clearfix">
 				<div class="col-xs-12 col-sm-12 col-md-12 col-lg-8">
 					<div class="panel panel-default" data-panel-close="false" data-panel-fullscreen="true" data-panel-collapsable="true">
 						<div class="panel-heading">
-							<span>Daily Attendance Breakdown: &nbsp; <?php echo $employee_name;?> (<?php echo date('j F Y',strtotime($start_date));?> - <?php echo date('j F Y',strtotime($end_date));?>)</span>
+							<span>Daily Attendance Breakdown: &nbsp; {{ $employee_name }} ({{ date('j F Y',strtotime($start_date)) }} - {{ date('j F Y',strtotime($end_date)) }})</span>
 						</div>
 						<div class="panel-body">
 
@@ -77,8 +77,8 @@
 										<?php
 										$t_present = 0; $t_break = 0;
 										foreach($data as $day=>$dd) {
-											$present = calcMinsPresent($dd);
-											$break = calcMinsBreak($dd);
+											$present = $funcs->calcMinsPresent($dd);
+											$break = $funcs->calcMinsBreak($dd);
 											$t_present += $present;
 											$t_break += $break;
 											$hp = floor($present/60); $mp = ($present % 60);
@@ -86,13 +86,13 @@
 											$chart_data[$day] = round($present/60,2);
 											?>
 										<tr>
-											<td><?php echo $day;?></td>
-											<td><?php echo $hp;?>h <?php echo $mp; ?>m</td>
+											<td>{{ $day }}</td>
+											<td>{{ $hp }}h {{ $mp }}m</td>
 											<td>
-											<?php echo $hb;?>h <?php echo $mb; ?>m
-											<?php if($present>360 && $break<30) { ?>
-											&nbsp;&nbsp;<i class="fa fa-lg fa-warning col-<?php echo ($break<25)?'danger':'warning';?>" title="Worked over 6 hrs without 30 min break"></i>
-											<?php } ?>
+											{{ $hb }}h {{ $mb }}m
+											@if($present>360 && $break<30)
+											&nbsp;&nbsp;<i class="fa fa-lg fa-warning col-{{ ($break<25) ? "danger" : "warning" }}" title="Worked over 6 hrs without 30 min break"></i>
+                                            @endif
 											</td>
 										</tr>
 										<?php } ?>
@@ -100,8 +100,8 @@
 									<tfoot>
 										<tr>
 											<th>Total</th>
-											<th><?php echo floor($t_present/60);?>h <?php echo ($t_present % 60); ?>m</th>
-											<th><?php echo floor($t_break/60);?>h <?php echo ($t_break % 60); ?>m</th>
+											<th>{{ floor($t_present/60) }}h {{ ($t_present % 60) }}m</th>
+											<th>{{ floor($t_break/60) }}h {{ ($t_break % 60) }}m</th>
 										</tr>
 									</tfoot>
 								</table>
@@ -110,13 +110,13 @@
 							<div class="col-xs-6">
 								<div class="alert icon-alert alert-success col-xs-12" role="alert">
 									<i class="fa fa-fw fa-check-circle"></i>
-									<span class="font-bold">Total hours present: <?php echo floor($t_present/60);?>h <?php echo ($t_present % 60); ?>m</span>
+									<span class="font-bold">Total hours present: {{ floor($t_present/60) }}h {{ ($t_present % 60) }}m</span>
 								</div>
 							</div>
 							<div class="col-xs-6">
 								<div class="alert icon-alert alert-warning col-xs-12" role="alert">
 									<i class="fa fa-fw fa-info-circle"></i>
-									<span class="font-bold">Total hours break: <?php echo floor($t_break/60);?>h <?php echo ($t_break % 60); ?>m</span>
+									<span class="font-bold">Total hours break: {{ floor($t_break/60) }}h {{ ($t_break % 60) }}m</span>
 								</div>
 							</div>
 
@@ -130,7 +130,7 @@
 				<!-- Line Chart -->
 				<div class="col-xs-12">
 					<div class="panel panel-default" data-panel-close="false" data-panel-fullscreen="true" data-panel-collapsable="true">
-						<div class="panel-heading"><span>Attendance Summary: &nbsp; <?php echo $employee_name;?> (<?php echo date('j F Y',strtotime($start_date));?> - <?php echo date('j F Y',strtotime($end_date));?>)</span></div>
+						<div class="panel-heading"><span>Attendance Summary: &nbsp; {{ $employee_name }} ({{ date('j F Y',strtotime($start_date)) }} - {{ date('j F Y',strtotime($end_date)) }})</span></div>
 						<div class="panel-body">
 							<canvas id="line_chart" height="50"></canvas>
 						</div>
@@ -139,11 +139,12 @@
 				<!-- #END# Line Chart -->
 			</div>
 
-		<?php } else { ?>
+		@else
 			<div class="row"><div class="col-xs-12 col-sm-12 col-md-12 col-lg-6"><div class="alert alert-warning" role="alert">
 				<i class="fa fa-fw fa-warning"></i><strong>No results found</strong>
 			</div></div></div>
-		<?php } } ?>
+		@endif
+		@endif
 
 	</div><!-- //page-body -->
 </section><!-- //content -->
@@ -159,17 +160,17 @@ var chart;
 $(function(){
 
 	// line chart
-	<?php if($_POST && $data) { ?>
+	@if($posted && $data)
 	initLineChart();
-	<?php } ?>
+	@endif
 	function initLineChart() {
 		var config = {
 			type: 'line',
 			data: {
-				labels: <?php echo json_encode(array_keys($chart_data));?>,
+				labels: {!! json_encode(array_keys($chart_data)) !!},
 				datasets: [{
 					label: "Hours Present",
-					data: <?php echo json_encode(array_values($chart_data));?>,
+					data: {!! json_encode(array_values($chart_data)) !!},
 					pointBorderWidth: 1,
 					lineTension: 0,
 					fill: 'origin',
@@ -202,13 +203,13 @@ $(function(){
 	$('#start_date').datetimepicker({
 		format: "YYYY-MM-DD",
 		showClear: true,
-		maxDate: "<?php echo date('Y-m-d',strtotime('yesterday'));?>",
+		maxDate: "{{ date('Y-m-d',strtotime('yesterday')) }}",
 		useCurrent: false
 	});
 	$('#end_date').datetimepicker({
 		format: "YYYY-MM-DD",
 		showClear: true,
-		maxDate: "<?php echo date('Y-m-d',strtotime('yesterday'));?>",
+		maxDate: "{{ date('Y-m-d',strtotime('yesterday')) }}",
 		useCurrent: false
 	});
 	$("#start_date").on("dp.change", function (e) {
@@ -220,7 +221,7 @@ $(function(){
 
 	// Exportable data table
 	var _title = 'Daily Attendance Breakdown';
-	var _message = '<?php echo $employee_name;?> (<?php echo date('j F Y',strtotime($start_date));?> - <?php echo date('j F Y',strtotime($end_date));?>)';
+	var _message = '{{ ($employee_name ?? '') }} ({{ date('j F Y',strtotime($start_date ?? '')) }} - {{ date('j F Y',strtotime($end_date ?? '')) }})';
 	$('.js-exportable').DataTable({
 		aaSorting: [],
 		searching: false,

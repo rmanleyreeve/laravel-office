@@ -34,6 +34,8 @@ class User extends Authenticatable
         'password_reset_token',
     ];
 
+    public $permission_names_array = [];
+
     /**
      * The attributes that should be cast to native types.
      *
@@ -45,5 +47,18 @@ class User extends Authenticatable
     {
         return $this->hasMany(ChangeLog::class, 'user_fk');
     }
+
+    public function permissions()
+    {
+        return $this->hasMany(LinkUserPermission::class, 'user_fk')
+            ->select('permission_fk');
+    }
+    public function permission_names()
+    {
+        return $this->hasMany(LinkUserPermission::class, 'user_fk')
+            ->join('user_permissions AS up','up.id','=','permission_fk')
+            ->select('up.permission_name');
+    }
+
 
 }

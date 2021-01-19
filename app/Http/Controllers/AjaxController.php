@@ -217,5 +217,4 @@ class AjaxController extends Controller
             ->header('Access-Control-Allow-Origin', '*');
     }
 
-
 }

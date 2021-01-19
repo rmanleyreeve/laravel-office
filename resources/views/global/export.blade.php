@@ -3,10 +3,10 @@
 // takes 2 params, $fields (array of column names) and $recordset (array of column values)
 $headings = str_replace('_FK','',strtoupper(implode(',',$fields)));
 $csv = "{$headings}\n";
-$find = array("\r\n","\n","\r","\t",'"',"&quot;");
-$replace = array(' ',' ',' ',' ',"'","'");
-$unique = array();
-foreach($recordset as $k=>$item) {
+$find = ["\r\n","\n","\r","\t",'"',"&quot;"];
+$replace = [' ',' ',' ',' ',"'","'"];
+$unique = [];
+foreach((array) $recordset as $k=>$item) {
 	foreach($fields as $f) {
 		$unique[$k][$f] = $item[$f];
 	}

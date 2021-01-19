@@ -16,23 +16,23 @@
 						<form class="form-horizontal validate" id="formAddEdit" method="post">
                             @csrf
 							<div class="form-group has-feedback">
-								<label class="col-sm-2 control-label">Date From:</label>
+								<label class="col-sm-3 control-label">Date From:</label>
 								<div class="col-sm-4">
 									<div class="input-group"><span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-										<input class="form-control input-sm datepicker" name="start_date" id="start_date" value="<?php echo $start_date ?? date('Y-m-d',strtotime('-1 week'));?>" required />
+										<input class="form-control input-sm datepicker" name="start_date" id="start_date" value="{{ $start_date ?? date('Y-m-d',strtotime('-1 week')) }}" required />
 									</div>
 								</div>
 							</div>
 							<div class="form-group has-feedback">
-								<label class="col-sm-2 control-label">Date To:</label>
+								<label class="col-sm-3 control-label">Date To:</label>
 								<div class="col-sm-4">
 									<div class="input-group"><span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-										<input class="form-control input-sm datepicker" name="end_date" id="end_date" value="<?php echo $end_date ?? date('Y-m-d',strtotime('yesterday'));?>" required />
+										<input class="form-control input-sm datepicker" name="end_date" id="end_date" value="{{ $end_date ?? date('Y-m-d',strtotime('yesterday')) }}" required />
 									</div>
 								</div>
 							</div>
 							<div class="form-group">
-								<div class="col-sm-offset-2 p-l-15">
+								<div class="col-sm-offset-3 p-l-15">
 									<button type="submit" class="m-w-100 btn btn-sm btn-primary">Submit</button>
 								</div>
 							</div>
@@ -44,12 +44,12 @@
 			</div><!-- //col -->
 		</div><!-- //row -->
 
-		<?php if($_POST) { if($data) { ?>
+		@if($posted) @if($data)
 			<div class="row clearfix">
 				<div class="col-xs-12 col-sm-12 col-md-12 col-lg-8">
 					<div class="panel panel-default" data-panel-close="false" data-panel-fullscreen="true" data-panel-collapsable="true">
 						<div class="panel-heading">
-							<span>Overall Hours Report: &nbsp; <?php echo date('D j F Y',strtotime($start_date));?> - <?php echo date('D j F Y',strtotime($end_date));?></span>
+							<span>Overall Hours Report: &nbsp; {{ date('D j F Y',strtotime($start_date)) }} - {{ date('D j F Y',strtotime($end_date)) }}</span>
 						</div>
 						<div class="panel-body">
 
@@ -67,14 +67,14 @@
 										foreach($data as $n=>$d) {
 											$present = 0; $break = 0;
 											foreach($d as $dd) {
-												$present += calcMinsPresent($dd);
-												$break += calcMinsBreak($dd);
+												$present += $funcs->calcMinsPresent($dd);
+												$break += $funcs->calcMinsBreak($dd);
 											}
 											?>
 										<tr>
-											<td><?php echo $n;?></td>
-											<td><?php echo floor($present/60);?>h <?php echo ($present % 60); ?>m</td>
-											<td><?php echo floor($break/60);?>h <?php echo ($break % 60); ?>m</td>
+											<td>{{ $n }}</td>
+											<td>{{ floor($present/60) }}h {{ ($present % 60) }}m</td>
+											<td>{{ floor($break/60) }}h {{ ($break % 60) }}m</td>
 										</tr>
 										<?php } ?>
 									</tbody>
@@ -85,11 +85,12 @@
 					</div><!-- //panel -->
 				</div><!-- //col -->
 			</div><!-- //row -->
-		<?php } else { ?>
+		@else
 			<div class="row"><div class="col-xs-12 col-sm-12 col-md-12 col-lg-6"><div class="alert alert-warning" role="alert">
 				<i class="fa fa-fw fa-warning"></i><strong>No results found</strong>
 			</div></div></div>
-		<?php } } ?>
+        @endif
+        @endif
 
 	</div><!-- //page-body -->
 </section><!-- //content -->
@@ -113,7 +114,7 @@ $(function(){
 	$('#end_date').datetimepicker({
 		format: "YYYY-MM-DD",
 		showClear: true,
-		maxDate: "<?php echo date('Y-m-d',strtotime('yesterday'));?>",
+		maxDate: "{{ date('Y-m-d',strtotime('yesterday')) }}",
 		useCurrent: false
 	});
 	$("#start_date").on("dp.change", function (e) {
@@ -125,7 +126,7 @@ $(function(){
 
 	// Exportable data table
 	var _title = 'Overall Hours Report';
-	var _message = '<?php echo date('D j F Y',strtotime($start_date));?> - <?php echo date('D j F Y',strtotime($end_date));?>';
+	var _message = '{{ date('D j F Y',strtotime($start_date ?? '')) }} - {{ date('D j F Y',strtotime($end_date ?? '')) }}';
 	$('.js-exportable').DataTable({
 		aaSorting: [],
 		searching: false,

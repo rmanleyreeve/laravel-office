@@ -3,12 +3,12 @@
 	<div class="page-heading">
 		<h1>System Management</h1>
 	</div>
-							
+
 	<div class="page-body">
 
 		<div class="panel panel-default" data-panel-close="false" data-panel-fullscreen="false" data-panel-collapsable="false">
 			<div class="panel-heading">
-				<span>Activity Log for user: <strong><?php echo $recordset[0]['user'];?></strong> &nbsp;&nbsp;(<?php echo $recordset[0]['fullname'];?>)</span>
+				<span>Activity Log for user: <strong>{{ $selected->username }}</strong> &nbsp;&nbsp;({{ $selected->fullname }})</span>
 			</div>
 			<div class="panel-body">
 				<div class="table-responsive">
@@ -22,20 +22,20 @@
 							</tr>
 						</thead>
 						<tbody>
-						<?php foreach($recordset as $record) { ?>
+						@foreach($recordset as $record)
 							<tr>
-								<td><?php echo $record['timestamp'];?></td>
-								<td><?php echo $record['activity'];?></td>
-								<td><?php echo $record['url'];?></td>
+								<td>{{ $record->created_at }}</td>
+								<td>{{ $record->activity }}</td>
+								<td>{{ $record->url }}</td>
 								<td>
-									<?php if($record['hasdata']) { ?>
+									@if($record->hasdata)
 									<div class="form-group">
-										<a role="button" data-toggle="modal" data-target="#bsModal" href="/users/activity/data/<?php echo $record['uid'];?>" class="btn btn-xs btn-outline btn-success"><i class="fa fa-eye"></i> View Data</a>
+										<a role="button" data-toggle="modal" data-target="#bsModal" href="/users/activity/data/{{ $record->uid }}" class="btn btn-xs btn-outline btn-success"><i class="fa fa-eye"></i> View Data</a>
 									</div>
-									<?php } ?> 
+                                    @endif
 								</td>
 							</tr>
-						<?php } ?>
+                        @endforeach
 						</tbody>
 					</table>
 				</div><!-- //table-responsive -->
@@ -65,7 +65,7 @@ $(function(){
 
 	// Exportable data table
 	var _title = 'User Activity Log';
-	var _message = 'User: <strong><?php echo $recordset[0]['user'];?></strong> &nbsp;&nbsp;(<?php echo $recordset[0]['fullname'];?>)';
+	var _message = 'User: <strong>{{ $selected->username }}</strong> &nbsp;&nbsp;({{ $selected->fullname }})';
 	$('.js-exportable').DataTable({
 		aaSorting: [],
 		searching: false,
@@ -74,21 +74,21 @@ $(function(){
 				extend: 'copyHtml5',
 				header:true,
 				exportOptions: {columns: $("th:not('.no-export')")}
-			},			
+			},
 			{
 				extend: 'excelHtml5',
 				header:true,
 				exportOptions: {columns: $("th:not('.no-export')")}
-			},			
+			},
 			{
 				extend: 'pdfHtml5',
 				header:true,
 				message:_message,
 				title:_title,
 				exportOptions: {columns: $("th:not('.no-export')")}
-			},			
-			{ 
-				extend: 'print', 
+			},
+			{
+				extend: 'print',
 				header:true,
 				message:_message,
 				title:_title,
@@ -96,6 +96,6 @@ $(function(){
 			},
 		]
 	});
-	
+
 });
 </script>

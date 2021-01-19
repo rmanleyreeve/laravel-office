@@ -4,8 +4,8 @@
 	<!--
 	RMR BackOffice System
 	(c){{ date('Y') }} by rich@rmrdigitalmedia.co.uk
-	Powered by: PHP {{ phpversion() }}, Laravel {{ app()::VERSION }}, jQuery, Bootstrap 3, FPDI
-	UI: AdminBSB-Sensitive by gurayyarar
+	Powered by: PHP {{ phpversion() }}, Laravel {{ app()::VERSION }}
+	UI: AdminBSB-Sensitive by gurayyarar, jQuery, Bootstrap 3
 	-->
 	<head>
 		<meta charset="utf-8" />

@@ -56,7 +56,6 @@ class AdminController extends Controller
                 'selected'=>reset($res),
             ]
         );
-
     }
 
     public function executeAmendAttendance(Request $request) {
@@ -71,7 +70,7 @@ class AdminController extends Controller
                 ->where('time_logged','<>',"{$request->day} {$t}")
                 ->update([
                     'original_value'=>DB::raw('`time_logged`'),
-                    'updated_at'=>date('Y-m-d H:i:s'),
+                    'updated'=>date('Y-m-d H:i:s'),
                     'time_logged'=>"{$request->day} {$t}",
                     'update_reason'=>$request->reason[$uid],
                     'record_type'=>'MANUAL'

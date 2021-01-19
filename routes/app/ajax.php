@@ -18,7 +18,7 @@ Route::get('/header-alerts', [AjaxController::class,'getAlerts']);
 Route::get('/data', [AjaxController::class,'getData']);
 
 // check username AJAX
-Route::post('/check-username', [AjaxController::class,'checkUsername']);
+Route::post('/users/check-username', [AjaxController::class,'checkUsername']);
 
 // attendance error check (AJAX)
 Route::get('/admin-check-attendance-ajax', [AjaxController::class,'checkAttendance']);

@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use App\Models\Employee;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 use App\Providers\AppUtilsProvider as Utils;
 use App\Providers\AppFuncsProvider as Funcs;
@@ -46,6 +45,7 @@ class EmployeeController extends Controller
         if (!Session::get('user_id') || !Funcs::_up('EMPLOYEE')) {
             abort(403);
         }
+        //print_r($request->all()); exit;
         $dataObj = new Employee();
         $vars = Arr::except($request->all(), ['_token']);
         $dataObj->update($vars);
@@ -101,6 +101,7 @@ class EmployeeController extends Controller
         if (!Session::get('user_id') || !Funcs::_up('EMPLOYEE')) {
             abort(403);
         }
+        //print_r($request->all()); exit;
         $dataObj = Employee::where('deleted','=',false)->find($id);
         if(!$dataObj) {
             $request->session()->put('alert', ['type'=>'error','msg'=>'No matching employee!']);
