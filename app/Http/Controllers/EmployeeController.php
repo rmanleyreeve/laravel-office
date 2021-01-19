@@ -11,6 +11,7 @@ use App\Providers\AppUtilsProvider as Utils;
 use App\Providers\AppFuncsProvider as Funcs;
 use Illuminate\Support\Arr;
 use Intervention\Image\ImageManagerStatic as Image;
+use Illuminate\Support\Facades\Schema;
 
 
 class EmployeeController extends Controller
@@ -141,16 +142,18 @@ class EmployeeController extends Controller
         if (!Session::get('user_id') || !Funcs::_up('EMPLOYEE')) {
             abort(403);
         }
-        $employees = Employee::where('deleted','=',false)
+        $recordset = Employee::where('deleted','=',false)
             ->orderBy('surname')->orderBy('firstname')
             ->get();
-        $fields = array_keys(DB::schema('employees'));
+        $fields = Schema::getColumnListing('employees');
         unset($fields[array_search('image',$fields,true)]);
-        return view('global.export',[
+        return response()
+            ->view('global.export',[
                 'fields' => $fields,
-                'recordset'=>$employees,
-            ]
-        );
+                'recordset'=>$recordset,
+                'utils' => new Utils(),
+            ], 200)
+            ->header('Content-Type', 'text/csv');
     }
 
     public function getEmployeeImage($id){
