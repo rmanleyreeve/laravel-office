@@ -1,10 +1,10 @@
-﻿<?php if(!@$alert){ @$alert = $_SESSION['alert']; } ?><!DOCTYPE html>
+﻿<?php if(!isset($alert)){ @$alert = $_SESSION['alert']; } ?><!DOCTYPE html>
 <html lang="en">
 	<head>
 		<meta charset="utf-8"/>
 		<meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
-		<title>RE Media BackOffice</title>
+		<title>RMR BackOffice</title>
 		<link rel="icon" href="/favicon.ico" type="image/x-icon">
 		<link href="/assets/css/fonts.css" rel="stylesheet"/>
 		<link href="/assets/plugins/bootstrap/dist/css/bootstrap.css" rel="stylesheet"/>
@@ -18,12 +18,12 @@
 			<div class="row padding-15">
 				<div class="col-sm-6 col-sm-offset-3 col-md-4 col-md-offset-4 col-lg-4 col-lg-offset-4">
 					<form id="formChangePW" method="post" action="">
-					
+                        @csrf
 						<div class="signin-top-info">Please enter your current password:</div>
 						<div class="form-group" style="background-color: #fff;">
 							<input type="password" class="form-control" placeholder="Current Password" minlength="4" name="oldPassword" id="oldPassword" required />
 						</div>
-						
+
 						<div class="signin-top-info">Please enter your new password:</div>
 						<div class="form-group password-meter" style="background-color: #fff;">
 							<div class="input-group"><span class="input-group-addon"><i class="fa fa-lock"></i></span>
@@ -37,22 +37,22 @@
 								<input type="password" class="form-control" placeholder="Confirm New Password" minlength="4" name="newPasswordConfirm" id="newPasswordConfirm" required />
 							</div>
 						</div>
-										
+
 						<div class="form-group m-t-30 text-center">
 							<div class="col-xs-12">
 								<button type="submit" class="m-w-100 m-l-30 btn btn-primary btn-inline btn-flat">Submit</button>
 								<a href="/dashboard" class="m-w-100 m-l-30 btn btn-sm btn-outline btn-warning">Cancel</a>
 							</div>
 						</div>
-						
-						
+
+
 					</form>
 				</div>
 				<div class="col-sm-2 col-md-2 col-lg-4"></div>
 			</div>
 		</div>
 		<div class="signin-bottom-info"></div>
-	
+
 		<script src="/assets/plugins/jquery/dist/jquery.min.js"></script>
 		<script src="/assets/plugins/bootstrap/dist/js/bootstrap.js"></script>
 		<script src="/assets/plugins/jquery-validation/dist/jquery.validate.js"></script>
@@ -66,7 +66,7 @@
 			$('#toast-container').remove();
 			toastr.options = { <?php echo toastr_options(); ?> };
 			toastr['<?php echo $alert['type']; ?>']("<?php echo $alert['msg']; ?>", "<?php echo strtoupper($alert['type']); ?>");
-			<?php unset($alert); unset($_SESSION['alert']); } ?>			
+			<?php unset($alert); unset($_SESSION['alert']); } ?>
 			//jQuery validation
 			$('#formChangePW').validate({
 				rules: {

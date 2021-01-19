@@ -1,15 +1,15 @@
-﻿@if(!@$alert) <?php $alert = Session::get('alert'); ?> @endif
+﻿@if(!isset($alert)) <?php $alert = Session::get('alert'); ?> @endif
 <!DOCTYPE html>
 <html lang="en">
 	<!--
-	Office Admin System
+	RMR BackOffice System
 	(c)<?php echo date('Y');?> rmrdigitalmedia
 	-->
 	<head>
 		<meta charset="utf-8"/>
 		<meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
-		<title>Admin BackOffice</title>
+		<title>BackOffice System</title>
 		<link rel="icon" href="/favicon.ico" type="image/x-icon">
 		<link href="/assets/css/fonts.css" rel="stylesheet"/>
 		<link href="/assets/plugins/bootstrap/dist/css/bootstrap.css" rel="stylesheet"/>

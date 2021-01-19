@@ -3,8 +3,24 @@
 
 namespace App\Providers;
 
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Request;
+use App\Models\ChangeLog;
 
 class AppUtilsProvider {
+
+    // log changes to database
+    public static function chlog($a, $obj = NULL) {
+        if (!Session::get('user_id')){ return; }
+        $d = ($obj) ? json_encode($obj,JSON_PRETTY_PRINT):NULL;
+        ChangeLog::create([
+            'user_fk' => Session::get('user_id'),
+            'activity' => $a,
+            'url' => Request::method() .' '.url()->full(),
+            'data' => $d
+        ]);
+    }
 
     // pretty print arrays and vars
     public function pp($a) {
@@ -303,16 +319,18 @@ class AppUtilsProvider {
         $txt = stripslashes($txt);
         return ($txt);
     }
+
     // builds array from DB ENUM values, ensuring non-zero indexing
-    public function enumSelect($schema) {
-        reset($schema); $key = key($schema);
-        $opts = [];
-        $arr = [];
-        if($schema[$key]['default']) { $opts[] = $schema[$key]['default']; }
-        eval('$arr = '.str_replace('enum','array',$schema[$key]['type']).';');
-        $merge = array_unique(array_merge($opts,$arr));
-        array_unshift($merge,NULL); unset($merge[0]);
-        return $merge;
+    public static function enumSelect($tbl,$col){
+        $instance = new static; // create an instance of the model to be able to get the table name
+        $type = DB::select( DB::raw("SHOW COLUMNS FROM {$tbl} WHERE Field = '{$col}';"))[0]->Type;
+        preg_match('/^enum\((.*)\)$/', $type, $matches);
+        $enum = array();
+        foreach(explode(',', $matches[1]) as $value){
+            $v = trim( $value, "'" );
+            $enum[] = $v;
+        }
+        return $enum;
     }
     // duration in days
     public function getDays($sStartDate, $sEndDate){

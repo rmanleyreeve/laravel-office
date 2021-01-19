@@ -3,17 +3,18 @@
 	<div class="page-heading">
 		<h1>Employee Attendance Reporting</h1>
 	</div>
-	
+
 	<div class="page-body">
-	
+
 		<div class="row clearfix">
 			<div class="col-xs-12 col-sm-12 col-md-12 col-lg-6">
-			
+
 				<div class="panel panel-default" data-panel-close="false" data-panel-fullscreen="false" data-panel-collapsable="false">
 					<div class="panel-heading"><span>Select Criteria</span></div>
 					<div class="panel-body">
-		
+
 						<form class="form-horizontal validate" id="formAddEdit" method="post">
+                            @csrf
 							<div class="form-group has-feedback">
 								<label class="col-sm-2 control-label">Date From:</label>
 								<div class="col-sm-4">
@@ -36,10 +37,10 @@
 								</div>
 							</div>
 						</form>
-		
+
 					</div><!-- //panel-body -->
 				</div><!-- //panel -->
-				
+
 			</div><!-- //col -->
 		</div><!-- //row -->
 
@@ -51,7 +52,7 @@
 							<span>Overall Hours Report: &nbsp; <?php echo date('D j F Y',strtotime($start_date));?> - <?php echo date('D j F Y',strtotime($end_date));?></span>
 						</div>
 						<div class="panel-body">
-						
+
 							<div class="table-responsive">
 								<table class="table table-striped table-hover js-exportable dataTable">
 									<thead>
@@ -62,7 +63,7 @@
 										</tr>
 									</thead>
 									<tbody>
-										<?php 
+										<?php
 										foreach($data as $n=>$d) {
 											$present = 0; $break = 0;
 											foreach($d as $dd) {
@@ -79,17 +80,17 @@
 									</tbody>
 								</table>
 							</div><!-- //table-responsive -->
-							
+
 						</div><!-- //panel-body -->
 					</div><!-- //panel -->
 				</div><!-- //col -->
 			</div><!-- //row -->
-		<?php } else { ?>	
+		<?php } else { ?>
 			<div class="row"><div class="col-xs-12 col-sm-12 col-md-12 col-lg-6"><div class="alert alert-warning" role="alert">
 				<i class="fa fa-fw fa-warning"></i><strong>No results found</strong>
 			</div></div></div>
 		<?php } } ?>
-		
+
 	</div><!-- //page-body -->
 </section><!-- //content -->
 
@@ -99,11 +100,11 @@
 
 <script>
 $(function(){
-	
+
 	moment.updateLocale('en', {
 		week: { dow: 1 } // Monday is the first day of the week
 	});
-	
+
 	$('#start_date').datetimepicker({
 		format: "YYYY-MM-DD",
 		showClear: true,
@@ -134,11 +135,11 @@ $(function(){
 		buttons: [
 			{ extend: 'copyHtml5', footer: true, header:true },
 			{ extend: 'excelHtml5', footer: true, header:true },
-			{ extend: 'pdfHtml5', footer: true, header:true, message:_message, title:_title },			
+			{ extend: 'pdfHtml5', footer: true, header:true, message:_message, title:_title },
 			{ extend: 'print', footer: true, header:true, message:_message, title:_title },
 		]
 	});
-	
-	
+
+
 });
 </script>

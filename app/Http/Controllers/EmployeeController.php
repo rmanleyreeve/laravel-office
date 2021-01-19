@@ -106,6 +106,7 @@ class EmployeeController extends Controller
             $request->session()->put('alert', ['type'=>'error','msg'=>'No matching employee!']);
             return redirect()->to('/employees');
         } else {
+            $prev = $dataObj->toArray();
             $vars=Arr::except($request->all(),['_token']);
             $dataObj->update($vars);
             if($request->hasfile('image')) {
@@ -117,7 +118,7 @@ class EmployeeController extends Controller
                 $dataObj->image = file_get_contents($file->getPathname());
             }
             $dataObj->save();
-            //chlog("Edited employee {$id}",array('BEFORE'=>$prev,'AFTER'=>$dataObj->cast(),'DIFF'=>array_diff_assoc($dataObj->cast(),$prev)));
+            Utils::chlog("Edited employee {$id}",array('BEFORE'=>$prev,'AFTER'=>$dataObj->toArray(),'DIFF'=>array_diff_assoc($dataObj->toArray(),$prev)));
             $request->session()->put('alert',['type'=>'success','msg'=>'The selected employee has been updated.']);
             return redirect()->to('/employees');
         }

@@ -19,4 +19,11 @@ class Absence extends Model
         return $this->belongsTo(Employee::class, 'employee_fk', 'uid');
     }
 
+    public function employee_name() {
+        return $this->belongsTo(Employee::class, 'employee_fk', 'uid')
+            ->where('deleted','=',false)
+            ->select(['uid','initials'])
+            ->selectRaw("CONCAT(firstname,' ',surname) AS name");
+    }
+
 }

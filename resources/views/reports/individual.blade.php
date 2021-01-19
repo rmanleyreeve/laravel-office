@@ -3,16 +3,17 @@
 	<div class="page-heading">
 		<h1>Employee Attendance Reporting</h1>
 	</div>
-	
+
 	<div class="page-body">
-	
+
 		<div class="row clearfix">
 			<div class="col-xs-12 col-sm-12 col-md-12 col-lg-6">
-			
+
 				<div class="panel panel-default" data-panel-close="false" data-panel-fullscreen="false" data-panel-collapsable="false">
 					<div class="panel-heading"><span>Select Criteria</span></div>
 					<div class="panel-body">
 						<form class="form-horizontal validate" id="formAddEdit" method="post">
+                            @csrf
 							<div class="form-group" has-feedback>
 								<label class="col-sm-2 control-label">Employee:</label>
 								<div class="col-sm-6">
@@ -41,7 +42,7 @@
 										<input class="form-control input-sm datepicker" name="end_date" id="end_date" value="<?php echo $end_date ?? date('Y-m-d',strtotime('yesterday'));?>" required />
 									</div>
 								</div>
-							</div>	
+							</div>
 							<div class="form-group">
 								<div class="col-sm-offset-2 p-l-15">
 									<button id="btn-select" type="submit" class="m-w-100 btn btn-sm btn-primary">Submit</button>
@@ -50,7 +51,7 @@
 						</form>
 					</div><!-- //panel-body -->
 				</div><!-- //panel -->
-				
+
 			</div><!-- //col -->
 		</div><!-- //row -->
 
@@ -62,7 +63,7 @@
 							<span>Daily Attendance Breakdown: &nbsp; <?php echo $employee_name;?> (<?php echo date('j F Y',strtotime($start_date));?> - <?php echo date('j F Y',strtotime($end_date));?>)</span>
 						</div>
 						<div class="panel-body">
-						
+
 							<div class="table-responsive">
 								<table class="table table-striped table-hover js-exportable dataTable">
 									<thead>
@@ -105,7 +106,7 @@
 									</tfoot>
 								</table>
 							</div><!-- //table-responsive -->
-							
+
 							<div class="col-xs-6">
 								<div class="alert icon-alert alert-success col-xs-12" role="alert">
 									<i class="fa fa-fw fa-check-circle"></i>
@@ -118,7 +119,7 @@
 									<span class="font-bold">Total hours break: <?php echo floor($t_break/60);?>h <?php echo ($t_break % 60); ?>m</span>
 								</div>
 							</div>
-							
+
 						</div><!-- //panel-body -->
 					</div><!-- //panel -->
 				</div><!-- //col -->
@@ -138,12 +139,12 @@
 				<!-- #END# Line Chart -->
 			</div>
 
-		<?php } else { ?>	
+		<?php } else { ?>
 			<div class="row"><div class="col-xs-12 col-sm-12 col-md-12 col-lg-6"><div class="alert alert-warning" role="alert">
 				<i class="fa fa-fw fa-warning"></i><strong>No results found</strong>
 			</div></div></div>
 		<?php } } ?>
-		
+
 	</div><!-- //page-body -->
 </section><!-- //content -->
 
@@ -156,8 +157,8 @@
 var chart;
 
 $(function(){
-	
-	// line chart	
+
+	// line chart
 	<?php if($_POST && $data) { ?>
 	initLineChart();
 	<?php } ?>
@@ -197,7 +198,7 @@ $(function(){
 	moment.updateLocale('en', {
 		week: { dow: 1 } // Monday is the first day of the week
 	});
-	
+
 	$('#start_date').datetimepicker({
 		format: "YYYY-MM-DD",
 		showClear: true,
@@ -229,10 +230,10 @@ $(function(){
 		buttons: [
 			{ extend: 'copyHtml5', footer: true, header:true },
 			{ extend: 'excelHtml5', footer: true, header:true },
-			{ extend: 'pdfHtml5', footer: true, header:true, message:_message, title:_title },			
+			{ extend: 'pdfHtml5', footer: true, header:true, message:_message, title:_title },
 			{ extend: 'print', footer: true, header:true, message:_message, title:_title },
 		]
 	});
-	
+
 });
 </script>

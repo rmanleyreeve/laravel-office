@@ -25,8 +25,8 @@
 							</a>
 							<!-- Logo -->
 							<a class="navbar-brand" href="/">
-									<span class="logo-minimized">RE</span>
-									<span class="logo">RE Media BackOffice</span>
+									<span class="logo-minimized"></span>
+									<span class="logo">RMR BackOffice</span>
 							</a>
 							<!-- #END# Logo -->
 						</div>

@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\DB;
 use App\Providers\AppFuncsProvider as Funcs;
 use App\Models\Employee;
 use App\Models\ActivityLog;
+use Monolog\Utils;
 
 class AdminController extends Controller
 {
@@ -77,7 +78,7 @@ class AdminController extends Controller
                 ]);
         }
         DB::commit();
-        //chlog("Amended employee attendance",$_POST);
+        Utils::chlog("Amended employee attendance",$request->except('_token'));
         $request->session()->put('alert', ['type'=>'success','msg'=>'The selected employee attendance has been updated in the system.']);
         return redirect()->to('/dashboard');
     }
@@ -155,10 +156,9 @@ class AdminController extends Controller
         $dataObj->employee_fk = intval($id);
         $dataObj->record_type = 'MANUAL';
         $dataObj->save();
-        //chlog('Repaired employee attendance record',$dataObj->cast());
+        Utils::chlog('Repaired employee attendance record',$dataObj->toArray());
         $request->session()->put('alert', ['type'=>'success','msg'=>'The attendance record was repaired successfully.']);
         return redirect()->to('/admin/check-attendance');
-
     }
 
     public function getManualEntry(){
@@ -188,7 +188,7 @@ class AdminController extends Controller
         $dataObj->time_logged = date('Y-m-d H:i:s');
         $dataObj->record_type = 'MANUAL';
         $dataObj->save();
-        //chlog('Manually entered employee attendance record',$request->all());
+        Utils::chlog('Manually entered employee attendance record',$request->except('_token'));
         $request->session()->put('alert', ['type'=>'success','msg'=>'Manual entry recorded successfully.']);
         return redirect()->route('home');
     }

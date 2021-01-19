@@ -40,4 +40,10 @@ class User extends Authenticatable
      * @var array
      */
     protected $casts = [];
+
+    public function changes()
+    {
+        return $this->hasMany(ChangeLog::class, 'user_fk');
+    }
+
 }

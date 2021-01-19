@@ -3,9 +3,9 @@
 	<div class="page-heading">
 		<h1>Absence Calendar</h1>
 	</div>
-	
+
 	<div class="page-body">
-	
+
 		<div class="row clearfix">
 			<!-- Calendar -->
 			<div class="col-xs-12">
@@ -26,9 +26,9 @@
 <script>
 
 $(function () {
-	
+
 	$('#calendar').fullCalendar({
-		events: <?php echo json_encode($events); ?>,
+		events:  {!! json_encode($events) !!},
 		defaultView: 'month',
 		dayOfMonthFormat: 'ddd D MMM',
 		weekends: false,
@@ -50,7 +50,7 @@ $(function () {
 		droppable: false,
 		contentHeight: "auto",
 	});
-			
+
 });
 </script>
 

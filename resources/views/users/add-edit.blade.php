@@ -5,7 +5,7 @@
 		if($selected['administrator']) {
 			foreach($user_permissions as $p) {
 				$sel_user_permissions[] = $p['id'];
-			}		
+			}
 		} else {
 			$sel_user_permissions = explode(',',$selected['permissions']);
 		}
@@ -16,18 +16,18 @@
 	<div class="page-heading">
 		<h1>User Management</h1>
 	</div>
-	
+
 	<div class="page-body">
-	
+
 		<div class="row clearfix">
 			<div class="col-xs-12 col-sm-12 col-md-8 col-lg-8">
-			
+
 				<div class="panel panel-default" data-panel-close="false" data-panel-fullscreen="false" data-panel-collapsable="false">
 					<div class="panel-heading"><span><?php echo $action;?> User</span></div>
 					<div class="panel-body">
-		
+
 						<form class="form-horizontal validate" id="formAddEdit" method="post" enctype="multipart/form-data">
-						
+						    @csrf
 							<div class="form-group has-feedback">
 								<label class="col-sm-3 control-label">Username:</label>
 								<div class="col-sm-9">
@@ -46,7 +46,7 @@
 								<div class="col-sm-9">
 									<input class="form-control input-sm" autocomplete="new-password" type="password" name="password" id="password" required />
 								</div>
-							<?php } ?>								
+							<?php } ?>
 							</div>
 							<div class="form-group has-feedback">
 								<label class="col-sm-3 control-label">Full Name:</label>
@@ -66,7 +66,7 @@
 									<input type="hidden" name="administrator" value="0">
 									<input<?php radio(TRUE,$selected['administrator']);?> type="checkbox" class="js-switch" data-switchery="true" data-size="small" name="administrator" id="administrator" value="1">
 								</div>
-							</div>						
+							</div>
 							<div class="form-group" has-feedback>
 								<label class="col-sm-3 control-label">Admin Permissions:</label>
 								<div class="col-sm-9">
@@ -104,13 +104,13 @@
 								</div>
 							</div>
 						</form>
-		
+
 					</div><!-- //panel-body -->
 				</div><!-- //panel -->
-				
+
 			</div><!-- //col -->
 		</div><!-- //row -->
-		
+
 	</div><!-- //page-body -->
 </section><!-- //content -->
 
@@ -121,10 +121,10 @@
 <script>
 var edit = <?php echo ($selected['user_id']) ? 'true' : 'false'; ?>;
 var unsaved = false;
-$(":input").change(function(){ 
+$(":input").change(function(){
 	unsaved = true;
 });
-function unloadPage(){ 
+function unloadPage(){
 	if(edit && unsaved){
 		var message = "You have unsaved changes on this page. Do you want to leave this page and discard your changes or stay on this page?";
 		e.returnValue = message; // Cross-browser compatibility (src: MDN)
@@ -149,7 +149,7 @@ $(function(){
 		$('#permission_fk').multiSelect('select_all');
 		$('#permission_fk').multiSelect('refresh');
 	<?php } ?>
-	
+
 	$('#administrator').on('change',function(){
 		if($(this).is(':checked')) {
 			$('#permission_fk').multiSelect('select_all');
@@ -159,7 +159,7 @@ $(function(){
 			$('#permission_fk option').prop('selected',false);
 		}
 		$('#permission_fk').multiSelect('refresh');
-		
+
 	});
 
 });

@@ -96,7 +96,7 @@ function getNewNotifications(){
 			if(count > globalNotificationBadgeNum) {
 				//console.log('new activity detected: ',count,globalNotificationBadgeNum);
 				var msg = responseJson[0].firstname + ' ' + responseJson[0].surname + ' ' + responseJson[0].activity + ' ' + responseJson[0].time;
-				sendDesktopNotification('RE Media Office',msg,true);
+				sendDesktopNotification('Back Office System',msg,true);
 			}
 		} else {
 			$('#header-notifications span.label-count').html('0').hide(1000);
@@ -142,7 +142,8 @@ function updateRead(uid) {
 	fetch('/ajax/header-notifications', {
 		method: 'post',
 		headers: {
-			"Content-type": "application/x-www-form-urlencoded; charset=UTF-8"
+			"Content-type": "application/x-www-form-urlencoded; charset=UTF-8",
+            "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr('content'),
 		},
 		body: 'uid=' + JSON.stringify(uid)
 	})

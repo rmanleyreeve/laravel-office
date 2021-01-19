@@ -1,17 +1,17 @@
-﻿<?php if(!@$alert){ @$alert = $_SESSION['alert']; } ?><!DOCTYPE html>
+﻿<?php if(!isset($alert)){ @$alert = $_SESSION['alert']; } ?><!DOCTYPE html>
 <html lang="en">
 	<head>
 		<meta charset="utf-8" />
 		<meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
-		<title>RE Media BackOffice</title>
+		<title>RMR BackOffice</title>
 		<link rel="icon" href="/favicon.ico" type="image/x-icon">
 		<link href="/assets/css/fonts.css" rel="stylesheet"/>
 		<link href="/assets/plugins/bootstrap/dist/css/bootstrap.css" rel="stylesheet" />
 		<link href="/assets/plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet" />
 		<link href="/assets/css/app.css" rel="stylesheet" />
 	</head>
-	
+
 	<body class="fp-page">
 		<div class="fp-form-area">
 			<h1><img src="/assets/images/logo-trans.png"></h1>
@@ -33,7 +33,7 @@
 		<script src="/assets/plugins/bootstrap/dist/js/bootstrap.js"></script>
 		<script>
 		$(function(){
-			
+
 		});
 		</script>
 	</body>

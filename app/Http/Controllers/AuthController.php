@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Monolog\Utils;
 
 
 class AuthController extends Controller
@@ -35,7 +36,7 @@ class AuthController extends Controller
             $login_t = date('Y-m-d H:i:s',time());
             $login->last_login = $login_t;
             $login->save();
-            //chlog('Logged in');
+            //Utils::chlog('Logged in');
             $user = $login->toArray();
             unset($user['password']);
             if($user['administrator']) {

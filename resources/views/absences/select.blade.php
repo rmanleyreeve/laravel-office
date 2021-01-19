@@ -3,32 +3,32 @@
 	<div class="page-heading">
 		<h1>Employee Absence Management</h1>
 	</div>
-	
+
 	<div class="page-body">
-	
+
 		<div class="row clearfix">
 			<div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
-			
+
 				<div class="panel panel-default" data-panel-close="false" data-panel-fullscreen="false" data-panel-collapsable="false">
 					<div class="panel-heading"><span>Add Absence</span></div>
 					<div class="panel-body">
-		
-						<form class="form-horizontal validate" id="formAddEdit" method="post">
 
+						<form class="form-horizontal validate" id="formAddEdit" method="post">
+                            @csrf
 							<div class="form-group" has-feedback>
 								<label class="col-sm-2 control-label">Employee:</label>
 								<div class="col-sm-6">
 									<div class="input-group"><span class="input-group-addon"><i class="fa fa-user"></i></span>
 										<select class="form-control input-sm" name="employee_fk" id="employee_fk" required>
 											<option value="">-- Please select --</option>
-											<?php foreach($employees as $e) { ?>
-												<option value="<?php echo $e['uid'];?>"><?php echo $e['firstname'];?> <?php echo $e['surname'];?></option>
-											<?php } ?>
+											@foreach($employees as $e)
+												<option value="{{ $e->uid }}">{{ $e->firstname }} {{ $e->surname }}</option>
+                                            @endforeach
 										</select>
 									</div>
 								</div>
 							</div>
-							
+
 							<div class="form-group">
 								<label class="col-sm-2 control-label">Type:</label>
 								<div class="col-sm-6">
@@ -39,8 +39,8 @@
 									<input type="radio" name="absence_type" id="absence_type_sickness" value="SICKNESS"> Sickness
 									</label>
 								</div>
-							</div>							
-							
+							</div>
+
 							<div class="form-group">
 								<label class="col-sm-2 control-label">Notes:</label>
 								<div class="col-sm-6">
@@ -58,7 +58,7 @@
 										<label class="col-sm-2 control-label">Date:</label>
 										<div class="col-sm-4">
 											<div class="input-group"><span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-												<input class="form-control input-sm datepicker" name="absence_date" id="absence_date" value="<?php echo date('Y-m-d');?>" />
+												<input class="form-control input-sm datepicker" name="absence_date" id="absence_date" value="{{ date('Y-m-d') }}" />
 											</div>
 										</div>
 									</div>
@@ -66,13 +66,13 @@
 										<label class="col-sm-2 control-label">Duration:</label>
 										<div class="col-sm-4">
 											<select class="form-control input-sm" name="duration" id="duration" required>
-												<?php foreach($durations as $e) { ?>
-													<option value="<?php echo $e;?>"><?php echo hrname($e);?></option>
-												<?php } ?>
+												@foreach($durations as $e)
+													<option value="{{ $e }}">{{ $utils->hrname($e) }}</option>
+                                                @endforeach
 											</select>
 										</div>
 									</div>
-									
+
 								</div>
 								<div role="tabpanel" class="tab-pane fade in" id="range">
 									<div class="form-group has-feedback">
@@ -102,17 +102,17 @@
 								</div>
 							</div>
 						</form>
-		
+
 					</div><!-- //panel-body -->
 				</div><!-- //panel -->
-				
+
 			</div><!-- //col -->
 		</div><!-- //row -->
-	
+
 
 
 	</div>
-	
+
 </section>
 
 <link href="/assets/plugins/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.css" rel="stylesheet" />
@@ -121,14 +121,14 @@
 <script src="/assets/plugins/autosize/dist/autosize.js"></script>
 <script>
 $(function(){
-	
+
 	//Textarea auto growth
 	autosize($('.auto-growth'));
 
 	moment.updateLocale('en', {
 		week: { dow: 1 } // Monday is the first day of the week
 	});
-	
+
 	$('#start_date,#absence_date').datetimepicker({
 		format: "YYYY-MM-DD",
 		showClear: false,
@@ -147,7 +147,7 @@ $(function(){
 	$("#end_date").on("dp.change", function (e) {
 		$('#start_date').data("DateTimePicker").maxDate(e.date);
 	});
-	
+
 	$('#clear-range').on('click',function(){
 		$('#start_date, #end_date').val('');
 	});

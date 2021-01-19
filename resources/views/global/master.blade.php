@@ -1,9 +1,9 @@
-@if(!@$alert) <?php $alert = Session::get('alert'); ?> @endif
+@if(!isset($alert)) <?php $alert = Session::get('alert'); ?> @endif
 <!doctype html>
 <html lang="en">
 	<!--
-	RE Media BackOffice
-	(c){{ date('Y') }} by RE MEDIA  www.re-media.biz
+	RMR BackOffice System
+	(c){{ date('Y') }} by rich@rmrdigitalmedia.co.uk
 	Powered by: PHP {{ phpversion() }}, Laravel {{ app()::VERSION }}, jQuery, Bootstrap 3, FPDI
 	UI: AdminBSB-Sensitive by gurayyarar
 	-->
@@ -11,7 +11,8 @@
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
-		<title>RE Media BackOffice</title>
+        <meta name="csrf-token" content="{{ csrf_token() }}" />
+		<title>Back Office System</title>
 		<link rel="icon" href="/favicon.ico" type="image/x-icon">
 		<link href="/assets/css/fonts.css" rel="stylesheet"/>
 		<link href="/assets/plugins/bootstrap/dist/css/bootstrap.css" rel="stylesheet" />
@@ -63,6 +64,12 @@
         <script src="/assets/plugins/toastr/toastr.js"></script>
         <script>
             $(function(){
+
+                $.ajaxSetup({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    }
+                });
 
                 @if(@$alert)
                 // notifications
