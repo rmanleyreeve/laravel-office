@@ -1,9 +1,9 @@
-﻿@if(!isset($alert)) <?php $alert = Session::get('alert'); ?> @endif
-<!DOCTYPE html>
+﻿@if(!isset($alert)) @php $alert = Session::get('alert'); @endphp @endif
+    <!DOCTYPE html>
 <html lang="en">
 	<!--
 	RMR BackOffice System
-	(c)<?php echo date('Y');?> rmrdigitalmedia
+	(c){{ date('Y') }} rmrdigitalmedia
 	-->
 	<head>
 		<meta charset="utf-8"/>

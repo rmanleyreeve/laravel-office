@@ -94,11 +94,11 @@
 								<!-- User Menu -->
 								<li class="dropdown user-menu">
 									<a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown">
-										<?php
+										@php
                                         $img_id = file_exists(
                                             storage_path("app/public/media/user/user_".Session::get('user_id').".jpg")
                                         ) ? Session::get('user_id') : 0;
-                                        ?>
+                                        @endphp
 										<img src="/storage/media/user/user_{{ $img_id }}.jpg?t={{ time() }}" alt="User Image" />
 										<span class="hidden-xs">{{ Session::get('user.fullname') }}</span>
 									</a>

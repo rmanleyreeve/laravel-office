@@ -46,7 +46,7 @@
 								</div>
 								<div class="col-xs-4 col-sm-4">
 									<div class="input-group"><span class="input-group-addon"><i class="fa fa-clock-o"></i></span>
-										<input class="form-control input-sm datetimepicker" name="clock_time" id="clock_time" value="<?php echo date('H:i:s');?>" required />
+										<input class="form-control input-sm datetimepicker" name="clock_time" id="clock_time" value="{{ date('H:i:s') }}" required />
 									</div>
 								</div>
 							</div>

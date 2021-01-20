@@ -68,7 +68,7 @@
 								<label class="col-sm-3 control-label">Active:</label>
 								<div class="col-sm-9">
 									<input type="hidden" name="active" value="0">
-									<input<?php $utils->radio([NULL,TRUE],$selected->active); ?> type="checkbox" class="js-switch" data-size="small" data-switchery="true" name="active" value="1">
+									<input@php $utils->radio([NULL,TRUE],$selected->active); @endphp type="checkbox" class="js-switch" data-size="small" data-switchery="true" name="active" value="1">
 								</div>
 							</div>
 							<div class="form-group">

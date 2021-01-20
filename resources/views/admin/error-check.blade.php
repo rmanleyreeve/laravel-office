@@ -30,7 +30,7 @@
 									<td>{{ $name }}</td>
 									<td>{{ $day }}</td>
 									<td>
-                                        <?php $arr = array_values($activity); ?>
+                                        @php $arr = array_values($activity); @endphp
 									    @foreach($arr as $a)
 										 [{{ $a['activity'] }} {{ $a['time'] }}]
                                         @endforeach

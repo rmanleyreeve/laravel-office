@@ -1,4 +1,4 @@
-<?php
+@php
 
 // takes 2 params, $fields (array of column names) and $recordset (array of column values)
 $headings = str_replace('_FK','',strtoupper(implode(',',$fields)));
@@ -20,4 +20,5 @@ foreach($recordset as $item) {
 	$csv = trim(htmlspecialchars_decode($csv),",") . "\n";
 }
 echo "\xEF\xBB\xBF".$csv; // UTF-8 BOM
-?>
+
+@endphp

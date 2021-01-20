@@ -19,8 +19,8 @@
 								<span class="nav-label">Attendance</span>
 							</a>
 							<ul>
-								<li><a href="/attendance/week/<?php echo date('o/W');?>">Weekly Attendance</a></li>
-								<li><a href="/attendance/month/<?php echo date('Y/m');?>">Monthly Attendance</a></li>
+								<li><a href="/attendance/week/{{ date('o/W') }}">Weekly Attendance</a></li>
+								<li><a href="/attendance/month/{{ date('Y/m') }}">Monthly Attendance</a></li>
 							</ul>
 						</li>
 
@@ -81,7 +81,7 @@
 							<ul>
 								<li><a href="/users">List Users</a></li>
 								<li><a href="/users/add">Add User</a></li>
-								<li><a href="/users/activity/date/<?php echo date('Y-m-d');?>">Daily Activity Log</a></li>
+								<li><a href="/users/activity/date/{{ date('Y-m-d') }}">Daily Activity Log</a></li>
 								<li><a href="/users/activity/export/User_Activity Log_Export.csv" data-href="/users/activity/export/User_Activity Log_Export.csv" class="add-date">Export Full Activity Log</a></li>
 							</ul>
 						</li>

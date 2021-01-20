@@ -69,7 +69,7 @@ $(function(){
 	$('.datepicker').datetimepicker({
 		format: "YYYY-MM-DD",
 		showClear: true,
-		maxDate: "<?php echo date('Y-m-d');?>",
+		maxDate: "{{ date('Y-m-d') }}",
 		useCurrent: false
 	});
 

@@ -21,7 +21,7 @@
 										<select class="form-control input-sm" name="uid" id="uid" required>
 											<option value="">-- Please select --</option>
 											@foreach($employees as $e)
-												<option value="{{ $e->uid }}"<?php $utils->select($e->uid,$uid);?>>{{ $e->firstname }} {{ $e->surname }}</option>
+												<option value="{{ $e->uid }}"@php $utils->select($e->uid,$uid); @endphp>{{ $e->firstname }} {{ $e->surname }}</option>
                                             @endforeach
 										</select>
 									</div>
@@ -74,9 +74,9 @@
 										</tr>
 									</thead>
 									<tbody>
-										<?php
-										$t_present = 0; $t_break = 0;
-										foreach($data as $day=>$dd) {
+										@php $t_present = 0; $t_break = 0; @endphp
+										@foreach($data as $day=>$dd)
+                                            @php
 											$present = $funcs->calcMinsPresent($dd);
 											$break = $funcs->calcMinsBreak($dd);
 											$t_present += $present;
@@ -84,18 +84,18 @@
 											$hp = floor($present/60); $mp = ($present % 60);
 											$hb = floor($break/60); $mb = ($break % 60);
 											$chart_data[$day] = round($present/60,2);
-											?>
+                                            @endphp
 										<tr>
 											<td>{{ $day }}</td>
 											<td>{{ $hp }}h {{ $mp }}m</td>
 											<td>
 											{{ $hb }}h {{ $mb }}m
 											@if($present>360 && $break<30)
-											&nbsp;&nbsp;<i class="fa fa-lg fa-warning col-{{ ($break<25) ? "danger" : "warning" }}" title="Worked over 6 hrs without 30 min break"></i>
+                                                &nbsp;&nbsp;<i class="fa fa-lg fa-warning col-{{ ($break<25) ? "danger" : "warning" }}" title="Worked over 6 hrs without 30 min break"></i>
                                             @endif
 											</td>
 										</tr>
-										<?php } ?>
+                                        @endforeach
 									</tbody>
 									<tfoot>
 										<tr>

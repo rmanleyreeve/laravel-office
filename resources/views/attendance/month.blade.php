@@ -1,4 +1,4 @@
-<?php
+@php
 function prev_month_url($ms){
 	$t = strtotime("-1 month",$ms);
 	return date('Y/m', $t);
@@ -7,7 +7,7 @@ function next_month_url($ms){
 	$t = strtotime("+1 month",$ms);
 	return date('Y/m', $t);
 }
-?>
+@endphp
 <section class="content">
 	<div class="page-heading">
 		<h1>Attendance - {{ $months[intval($month)] }} {{ $year }}</h1>
@@ -43,7 +43,7 @@ function next_month_url($ms){
 								<!-- data rows -->
 								<tbody>
 								@foreach($days as $d)
-								    <?php $ss = (in_array(date('w',strtotime("$d $year")),array(6,0))); ?>
+								    @php $ss = (in_array(date('w',strtotime("$d $year")),array(6,0))); @endphp
 									<tr class="{{ $ss ? 'weekend':'' }}">
 									<!-- date -->
 									<th>{{ $d }}</th>
@@ -57,20 +57,20 @@ function next_month_url($ms){
                                             @continue
                                         @endisset
 									    <td>
-                                            <?php
+                                            @php
                                             //echo $n;
                                             $present = $funcs->calcMinsPresent($data[$n][$d]);
                                             $break = $funcs->calcMinsBreak($data[$n][$d]);
                                             $total = ($present + $break);
                                             $totals[$n]['total_present'] += $present;
                                             $totals[$n]['total_break'] += $break;
-                                            if($total) {
-                                                $hp = floor($present/60); $mp = ($present % 60);
-                                                $hb = floor($break/60); $mb = ($break % 60);
-                                                ?>
+                                            @endphp
+                                            @if($total)
+                                                @php $hp = floor($present/60); $mp = ($present % 60); @endphp
+                                                @php $hb = floor($break/60); $mb = ($break % 60); @endphp
                                                 {{ $hp }}h {{ $mp }}m / {{ $hb }}h {{ $mb }}m
                                                 &nbsp;<a role="button" data-toggle="modal" data-target="#bsModal" href="/attendance/day/{{ date('Y-m-d',strtotime("$d $year")) }}/{{ $employees[$n] }}/view"><i class="fa fa-clock-o" data-toggle="tooltip" data-placement="top" title="View Activity"></i></a>
-                                            <?php } ?>
+                                            @endif
 										</td>
                                     @endforeach
 									</tr>

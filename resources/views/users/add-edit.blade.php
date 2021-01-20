@@ -51,7 +51,7 @@
 								<label class="col-sm-3 control-label">Administrator:</label>
 								<div class="col-sm-9">
 									<input type="hidden" name="administrator" value="0">
-									<input<?php $utils->radio(TRUE,$selected->administrator ?? NULL);?> type="checkbox" class="js-switch" data-switchery="true" data-size="small" name="administrator" id="administrator" value="1">
+									<input@php $utils->radio(TRUE,$selected->administrator ?? NULL); @endphp type="checkbox" class="js-switch" data-switchery="true" data-size="small" name="administrator" id="administrator" value="1">
 								</div>
 							</div>
 							<div class="form-group" has-feedback>
@@ -59,7 +59,7 @@
 								<div class="col-sm-9">
 									<select class="form-control" name="permission_fk[]" id="permission_fk" multiple="multiple" required>
 										@foreach($user_permissions as $up)
-											<option value="{{ $up->id }}"<?php $utils->selectmulti($up->id,$sel_user_permissions);?>>{{ $up->permission_name }}</option>
+											<option value="{{ $up->id }}"@php $utils->selectmulti($up->id,$sel_user_permissions); @endphp>{{ $up->permission_name }}</option>
 										@endforeach
 									</select>
 								</div>
@@ -68,7 +68,7 @@
 								<label class="col-sm-3 control-label">Active:</label>
 								<div class="col-sm-9">
 									<input type="hidden" name="active" value="0">
-									<input<?php $utils->radio([NULL,TRUE],$selected->active ?? NULL);?> type="checkbox" class="js-switch" data-size="small" data-switchery="true" name="active" value="1">
+									<input@php $utils->radio([NULL,TRUE],$selected->active ?? NULL); @endphp type="checkbox" class="js-switch" data-size="small" data-switchery="true" name="active" value="1">
 								</div>
 							</div>
 							<div class="form-group">

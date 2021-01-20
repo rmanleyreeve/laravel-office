@@ -44,6 +44,7 @@ class UserController extends Controller
                 'action'=>'Add New',
                 'selected' => ['active'=>1],
                 'user_permissions' => $permissions,
+                'sel_user_permissions' => [],
                 'utils'=> new Utils(),
             ]
         );

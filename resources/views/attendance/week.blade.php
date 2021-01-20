@@ -1,4 +1,4 @@
-<?php
+@php
 function prev_week_url($ws){
 	$t = strtotime("-7 day",$ws);
 	return date('o/W', $t);
@@ -7,7 +7,7 @@ function next_week_url($ws){
 	$t = strtotime("+1 day",$ws);
 	return date('o/W', $t);
 }
-?>
+@endphp
 <section class="content">
 
 	<div class="page-heading">
@@ -62,16 +62,16 @@ $(function () {
 			legend: {display:false,reverse:true},
 			data: {
 				datasets: [
-<?php
-foreach($days as $i=>$d) {
-	$n = substr($d,0,3);
-	$vals = [];
-	foreach($data as $dd) {
-		$vals[] = round($funcs->calcMinsPresent($dd[$d])/60,2);
-	}
-?>
+@foreach($days as $i=>$d)
+    @php
+        $n = substr($d,0,3);
+        $vals = [];
+	@endphp
+	@foreach($data as $dd)
+		@php $vals[] = round($funcs->calcMinsPresent($dd[$d])/60,2); @endphp
+	@endforeach
 					{ label:"{{ $d }}", backgroundColor:"{{ $barchart_colours[$n] }}", data: {!! json_encode($vals) !!} },
-<?php } ?>
+@endforeach
 				]
 			},
 			options: {

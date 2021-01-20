@@ -63,20 +63,20 @@
 										</tr>
 									</thead>
 									<tbody>
-										<?php
-										foreach($data as $n=>$d) {
-											$present = 0; $break = 0;
-											foreach($d as $dd) {
-												$present += $funcs->calcMinsPresent($dd);
+										@foreach($data as $n=>$d)
+											@php $present = 0; $break = 0; @endphp
+											@foreach($d as $dd)
+												@php
+                                                $present += $funcs->calcMinsPresent($dd);
 												$break += $funcs->calcMinsBreak($dd);
-											}
-											?>
+                                                @endphp
+                                            @endforeach
 										<tr>
 											<td>{{ $n }}</td>
 											<td>{{ floor($present/60) }}h {{ ($present % 60) }}m</td>
 											<td>{{ floor($break/60) }}h {{ ($break % 60) }}m</td>
 										</tr>
-										<?php } ?>
+                                        @endforeach
 									</tbody>
 								</table>
 							</div><!-- //table-responsive -->

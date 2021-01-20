@@ -1,5 +1,5 @@
-@if(!isset($alert)) <?php $alert = Session::get('alert'); ?> @endif
-<!doctype html>
+@if(!isset($alert)) @php $alert = Session::get('alert'); @endphp @endif
+    <!doctype html>
 <html lang="en">
 	<!--
 	RMR BackOffice System
@@ -116,7 +116,7 @@
 							Copyright &copy; {{ date('Y') }} <strong><a href="https://www.re-media.biz/" target="_blank">RE Media</a></strong>
 						</div>
 						<div class="col-sm-6 align-right">
-							Developed by <strong><a href="https://re-media.biz" target="_blank">RE MEDIA</a></strong> <?php echo date('Y'); ?>
+							Developed by <strong><a href="https://re-media.biz" target="_blank">RE MEDIA</a></strong> {{ date('Y') }}
 						</div>
 					</div>
 				</div>

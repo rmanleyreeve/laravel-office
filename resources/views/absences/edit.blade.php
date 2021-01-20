@@ -6,10 +6,10 @@
 		<label class="col-sm-2 control-label">Type:</label>
 		<div class="col-sm-6">
 			<label class="radio-inline" for="absence_type_holiday">
-				<input type="radio" name="absence_type" id="absence_type_holiday" value="HOLIDAY"<?php $utils->radio('HOLIDAY',$selected->absence_type);?>> Holiday
+				<input type="radio" name="absence_type" id="absence_type_holiday" value="HOLIDAY"@php $utils->radio('HOLIDAY',$selected->absence_type); @endphp> Holiday
 				</label>
 			<label class="radio-inline" for="absence_type_sickness">
-			<input type="radio" name="absence_type" id="absence_type_sickness" value="SICKNESS"<?php $utils->radio('SICKNESS',$selected->absence_type); ?>> Sickness
+			<input type="radio" name="absence_type" id="absence_type_sickness" value="SICKNESS@php $utils->radio('SICKNESS',$selected->absence_type); @endphp> Sickness
 			</label>
 		</div>
 	</div>
@@ -24,7 +24,7 @@
 		<div class="col-sm-4">
 			<select class="form-control input-sm" name="duration" id="duration" required>
 				@foreach($durations as $e)
-					<option value="{{ $e }}"<?php $utils->select($e,$selected->duration); ?>>{{ $utils->hrname($e) }}</option>
+					<option value="{{ $e }}"@php $utils->select($e,$selected->duration); @endphp>{{ $utils->hrname($e) }}</option>
 				@endforeach
 			</select>
 		</div>
