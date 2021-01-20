@@ -1,4 +1,4 @@
-﻿<?php if(!isset($alert)){ @$alert = $_SESSION['alert']; } ?><!DOCTYPE html>
+﻿@if(!isset($alert)) <?php $alert = Session::get('alert'); ?> @endif
 <html lang="en">
 	<head>
 		<meta charset="utf-8"/>
@@ -30,7 +30,7 @@
 						</div>
 						<br>
 						<div class="form-group has-feedback">
-							<div class="input-group"><span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+							<div class="input-group"><span class="input-group-addon"><i class="fa fa-lock"></i></span>
 								<input type="password" class="form-control" placeholder="Confirm Password" minlength="4" name="ConfirmPassword" id="ConfirmPassword" required />
 							</div>
 						</div>
@@ -39,8 +39,8 @@
 								<button type="submit" class="btn btn-primary btn-block btn-flat">Submit</button>
 							</div>
 						</div>
-            <input type="hidden" name="user_id" value="<?php echo $user_id; ?>">
-            <input type="hidden" name="token" value="<?php echo $token; ?>">
+                        <input type="hidden" name="user_id" value="{{ $user_id }}">
+                        <input type="hidden" name="token" value="{{ $token }}">
 					</form>
 				</div>
 				<div class="col-sm-2 col-md-2 col-lg-4"></div>
@@ -54,14 +54,14 @@
     <script src="/assets/plugins/zxcvbn/dist/zxcvbn.js"></script>
     <script src="/assets/plugins/toastr/toastr.js"></script>
 		<script>
-			$(function () {
+        $(function () {
 
-			<?php if($alert) { ?>
-			// notifications
-			$('#toast-container').remove();
-			toastr.options = { <?php echo toastr_options(); ?> };
-			toastr['<?php echo $alert['type']; ?>']("<?php echo $alert['msg']; ?>", "<?php echo strtoupper($alert['type']); ?>");
-			<?php unset($alert); unset($_SESSION['alert']); } ?>
+            @if($alert)
+            // notifications
+            $('#toast-container').remove();
+            toastr.options = {  {!! \App\Providers\AppFuncsProvider::toastr_options() !!} };
+            toastr['{{ $alert['type'] }}']("{{ $alert['msg'] }}", "{{ strtoupper($alert['type']) }}");
+            {{ $alert = NULL }} {{ Session::forget('alert') }} @endif
 			//jQuery validation
 			$('#frmReset').validate({
 				rules: {

@@ -60,7 +60,7 @@
 		<script>
 		$(function () {
 
-            @if(@$alert)
+            @if($alert)
             // notifications
             $('#toast-container').remove();
             toastr.options = {  {!! \App\Providers\AppFuncsProvider::toastr_options() !!} };

@@ -1,4 +1,4 @@
-﻿<?php if(!isset($alert)){ @$alert = $_SESSION['alert']; } ?><!DOCTYPE html>
+﻿@if(!isset($alert)) <?php $alert = Session::get('alert'); ?> @endif
 <html lang="en">
 	<head>
 		<meta charset="utf-8" />

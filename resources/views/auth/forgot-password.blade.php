@@ -1,4 +1,4 @@
-﻿<?php if(!isset($alert)){ @$alert = $_SESSION['alert']; } ?><!DOCTYPE html>
+﻿@if(!isset($alert)) <?php $alert = Session::get('alert'); ?> @endif
 <html lang="en">
 	<head>
 		<meta charset="utf-8" />
@@ -47,12 +47,12 @@
 		<script>
 		$(function () {
 
-			<?php if($alert) { ?>
+			@if($alert)
 			// notifications
 			$('#toast-container').remove();
-			toastr.options = { <?php echo toastr_options(); ?> };
-			toastr['<?php echo $alert['type']; ?>']("<?php echo $alert['msg']; ?>", "<?php echo strtoupper($alert['type']); ?>");
-			<?php unset($alert); unset($_SESSION['alert']); } ?>
+            toastr.options = {  {!! \App\Providers\AppFuncsProvider::toastr_options() !!} };
+            toastr['{{ $alert['type'] }}']("{{ $alert['msg'] }}", "{{ strtoupper($alert['type']) }}");
+            {{ $alert = NULL }} {{ Session::forget('alert') }} @endif
 			//jQuery validation
 			$('#frmForgotPassword').validate({
 				highlight: function (element) {

@@ -13,7 +13,6 @@ class DashboardController extends Controller
 {
     // main app dashboard
     public function showDashboard() {
-
         if (!Session::get('user_id')) {
             return redirect()->route('default');
         }

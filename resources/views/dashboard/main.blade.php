@@ -237,12 +237,12 @@ foreach($days as $i=>$d) {
 	}
 	// check db every 15 secs
 	checkAttendance();
-	//setInterval(checkAttendance, 15000);
+	setInterval(checkAttendance, 15000);
 
 	// display time in header bar
-	updateClock();
-	setInterval('updateClock()', 3000);
-	$('#cal-date').html($.datepicker.formatDate('DD d MM yy', new Date()));
+    updateClock();
+    setInterval('updateClock()', 3000);
+    $('#cal-date').html($.datepicker.formatDate('DD d MM yy', new Date()));
 
 	// calendar
 	$('#calendar').fullCalendar({
@@ -275,4 +275,9 @@ foreach($days as $i=>$d) {
 	});
 
 });
+</script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // your code here
+}, false);
 </script>

@@ -1,4 +1,4 @@
-﻿<?php if(!isset($alert)){ @$alert = $_SESSION['alert']; } ?><!DOCTYPE html>
+﻿@if(!isset($alert)) <?php $alert = Session::get('alert'); ?> @endif
 <html lang="en">
 	<head>
 		<meta charset="utf-8"/>
@@ -33,7 +33,7 @@
 							<span class="strength-text"></span>
 						</div>
 						<div class="form-group has-feedback">
-							<div class="input-group"><span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+							<div class="input-group"><span class="input-group-addon"><i class="fa fa-lock"></i></span>
 								<input type="password" class="form-control" placeholder="Confirm New Password" minlength="4" name="newPasswordConfirm" id="newPasswordConfirm" required />
 							</div>
 						</div>
@@ -41,7 +41,7 @@
 						<div class="form-group m-t-30 text-center">
 							<div class="col-xs-12">
 								<button type="submit" class="m-w-100 m-l-30 btn btn-primary btn-inline btn-flat">Submit</button>
-								<a href="/dashboard" class="m-w-100 m-l-30 btn btn-sm btn-outline btn-warning">Cancel</a>
+								<a href="/dashboard" class="m-w-100 m-l-30 btn btn-warning btn-inline btn-flat">Cancel</a>
 							</div>
 						</div>
 
@@ -59,14 +59,14 @@
     <script src="/assets/plugins/zxcvbn/dist/zxcvbn.js"></script>
     <script src="/assets/plugins/toastr/toastr.js"></script>
 		<script>
-			$(function () {
+        $(function () {
 
-			<?php if($alert) { ?>
-			// notifications
-			$('#toast-container').remove();
-			toastr.options = { <?php echo toastr_options(); ?> };
-			toastr['<?php echo $alert['type']; ?>']("<?php echo $alert['msg']; ?>", "<?php echo strtoupper($alert['type']); ?>");
-			<?php unset($alert); unset($_SESSION['alert']); } ?>
+            @if($alert)
+            // notifications
+            $('#toast-container').remove();
+            toastr.options = {  {!! \App\Providers\AppFuncsProvider::toastr_options() !!} };
+            toastr['{{ $alert['type'] }}']("{{ $alert['msg'] }}", "{{ strtoupper($alert['type']) }}");
+            {{ $alert = NULL }} {{ Session::forget('alert') }} @endif
 			//jQuery validation
 			$('#formChangePW').validate({
 				rules: {

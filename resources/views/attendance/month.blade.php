@@ -13,7 +13,7 @@ function next_month_url($ms){
 		<h1>Attendance - {{ $months[intval($month)] }} {{ $year }}</h1>
 		<div class="fc fc-button-group" style="margin-left:20px;">
 			<button title="Previous Month" data-month="{{ prev_month_url($monthstart) }}" type="button" class="fc-prev-button fc-button fc-state-default fc-corner-left"><span class="fc-icon fc-icon-left-single-arrow"></span></button>
-			@if($month != date('m'))
+			@if((date('Y') == $year && $month != date('m')) || $year != date('Y'))
 			<button title="Next Month" data-month="{{ next_month_url($monthstart) }}" type="button" class="fc-next-button fc-button fc-state-default fc-corner-right"><span class="fc-icon fc-icon-right-single-arrow"></span></button>
 			<button title="Current Month" type="button" class="fc-today-button fc-button fc-state-default fc-corner-left fc-corner-right" onClick="window.location='/attendance/month/{{ date('Y/m') }}';">This Month</button>
             @endif
@@ -92,7 +92,7 @@ function next_month_url($ms){
 										@foreach(array_keys($data) as $n)
 											<td>
 											@if($totals[$n]['total_present'])
-												<{{ floor($totals[$n]['total_present']/60) }}h {{ $totals[$n]['total_present'] % 60 }}m<br>
+												{{ floor($totals[$n]['total_present']/60) }}h {{ $totals[$n]['total_present'] % 60 }}m<br>
 												{{ floor($totals[$n]['total_break']/60) }}h {{ $totals[$n]['total_break'] % 60 }}m
 											@endif
 											</td>

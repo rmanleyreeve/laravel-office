@@ -308,22 +308,17 @@ class UserController extends Controller
         //print_r($recordset); exit();
         if(!$recordset) {
             $request->session()->put('alert', ['type'=>'error','msg'=>'No user activity found!']);
-            return redirect()->back();
+            return redirect()->to('/users');
         }
-        //print_r($recordset); exit();
-        if(!$recordset) {
-            $request->session()->put('alert', ['type'=>'error','msg'=>'No user activity found!']);
-            return redirect()->back();
-        }
-            return view('global.master',[
-                    'content'=>'users/user-activity',
-                    'recordset'=>$recordset,
-                    'funcs' => new Funcs(),
-                    'menu' => '/users',
-                    'selected' => reset($recordset),
-                ]
-            );
-        }
+        return view('global.master',[
+                'content'=>'users/user-activity',
+                'recordset'=>$recordset,
+                'funcs' => new Funcs(),
+                'menu' => '/users',
+                'selected' => reset($recordset),
+            ]
+        );
+    }
 
     public function getActivityByDate($d, Request $request) {
         if (!Session::get('user_id') || !Funcs::_up('USER')) {
@@ -339,8 +334,7 @@ class UserController extends Controller
             ->toArray();
         //print_r($recordset); exit();
         if(!$recordset) {
-            $request->session()->put('alert', ['type'=>'error','msg'=>'No user activity found!']);
-            return redirect()->back();
+            $request->session()->put('alert', ['type'=>'warning','msg'=>'No user activity found!']);
         }
         return view('global.master',[
                 'content'=>'users/activity',

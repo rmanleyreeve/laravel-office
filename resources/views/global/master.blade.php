@@ -34,7 +34,7 @@
 		<script src="/assets/plugins/jquery-ui/jquery-ui.js"></script>
 		<!-- Bootstrap Core Js -->
 		<script src="/assets/plugins/bootstrap/dist/js/bootstrap.min.js"></script>
-		<script src="/assets/js/bootbox.min.js"></script>
+		<script src="/assets/plugins/bootbox.js/dist/bootbox.min.js"></script>
 		<!-- iCheck Js -->
 		<script src="/assets/plugins/iCheck/icheck.js"></script>
 		<!-- Jquery Validation Js -->
@@ -71,7 +71,7 @@
                     }
                 });
 
-                @if(@$alert)
+                @if($alert)
                 // notifications
                 $('#toast-container').remove();
                 toastr.options = {  {!! \App\Providers\AppFuncsProvider::toastr_options() !!} };
@@ -143,7 +143,6 @@
 		<!-- Switchery Js -->
 		<script src="/assets/plugins/switchery/dist/switchery.js"></script>
 		<!-- Custom Js -->
-		<script src="/assets/js/admin.js"></script>
 		<script src="/assets/js/app.js"></script>
 	</body>
 
