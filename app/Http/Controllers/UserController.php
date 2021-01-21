@@ -16,9 +16,6 @@ use Illuminate\Support\Facades\Session;
 class UserController extends Controller
 {
     public function getUsers(){
-        if (!Session::get('user_id') || !Funcs::_up('USER')) {
-            abort(403);
-        }
         $recordset = User::where('deleted','=',false)
             ->select('*')
             ->selectRaw("(SELECT GROUP_CONCAT(permission_name ORDER BY permission_name SEPARATOR ', ') FROM user_permissions WHERE id IN (SELECT permission_fk FROM link_user_permission WHERE user_fk=users.user_id)) AS permissions")
@@ -35,9 +32,6 @@ class UserController extends Controller
     }
 
     public function getAddUser(){
-        if (!Session::get('user_id') || !Funcs::_up('USER')) {
-            abort(403);
-        }
         $permissions = DB::table('user_permissions')->select('id','permission_name')->get()->toArray();
         return view('global.master',[
                 'content'=>'users/add-edit',
@@ -50,11 +44,9 @@ class UserController extends Controller
         );
     }
     public function postAddUser(Request $request){
-        if (!Session::get('user_id') || !Funcs::_up('USER')) {
-            abort(403);
-        }
         //print_r($request->all()); exit;
         $request->request->add(['password_reset_token'=>NULL]);
+        $request->merge(['password' => password_hash($request->password,PASSWORD_BCRYPT)]);
         $dataObj = User::create($request->except(['_token']));
         $id = $dataObj->user_id;
         DB::beginTransaction();
@@ -88,9 +80,6 @@ class UserController extends Controller
     }
 
     public function viewUser($id){
-        if (!Session::get('user_id') || !Funcs::_up('USER')) {
-            abort(403);
-        }
         $user = User::where('deleted','=',false)->find($id);
         if(!$user) {
             return response('<h1 class="error">No matching user!</h1>');
@@ -110,9 +99,6 @@ class UserController extends Controller
     }
 
     public function getEditUser($id,Request $request) {
-        if (!Session::get('user_id') || !Funcs::_up('USER')) {
-            abort(403);
-        }
         $user = User::where('deleted','=',false)->find($id);
         if(!$user) {
             $request->session()->put('alert', ['type'=>'error','msg'=>'No matching user!']);
@@ -144,9 +130,6 @@ class UserController extends Controller
         );
     }
     public function postEditUser($id,Request $request) {
-        if (!Session::get('user_id') || !Funcs::_up('USER')) {
-            abort(403);
-        }
         //print_r($request->all()); exit;
         $dataObj = User::where('deleted','=',false)->find($id);
         if(!$dataObj) {
@@ -157,12 +140,12 @@ class UserController extends Controller
             if('' == $request->password) {
                 $request->request->remove('password');
             } else {
-                $request->request->replace(['password'],[password_hash($request->password)]);
+                $request->merge(['password' => password_hash($request->password,PASSWORD_BCRYPT)]);
             }
             $dataObj->update($request->except('_token'));
             DB::beginTransaction();
             DB::table('link_user_permission')->where('user_fk','=',$id)->delete();
-            foreach(array_unique($request->permission_fk) as $fk) {
+            foreach(array_unique((array)$request->permission_fk) as $fk) {
                 DB::table('link_user_permission')->insert([
                     'user_fk' => $id,
                     'permission_fk' => $fk
@@ -193,9 +176,6 @@ class UserController extends Controller
     }
 
     public function deleteUser($id, Request $request){
-        if (!Session::get('user_id') || !Funcs::_up('USER')) {
-            abort(403);
-        }
         $dataObj = User::where('deleted','=',false)->find($id);
         if(!$dataObj) {
             $request->session()->put('alert', ['type'=>'error','msg'=>'No matching user!']);
@@ -208,9 +188,6 @@ class UserController extends Controller
     }
 
     public function getProfile($id,Request $request){
-        if (!Session::get('user_id') || !Funcs::_up('USER')) {
-            abort(403);
-        }
         $user = User::where('deleted','=',false)->find($id);
         if(!$user) {
             $request->session()->put('alert', ['type'=>'error','msg'=>'No matching user!']);
@@ -231,9 +208,6 @@ class UserController extends Controller
     }
 
     public function getUserImage($id,Request $request){
-        if (!Session::get('user_id') || !Funcs::_up('USER')) {
-            abort(403);
-        }
         $user = User::where('deleted','=',false)->find($id);
         if(!$user) {
             return response('<h1 class="error">No matching user!</h1>');
@@ -247,9 +221,6 @@ class UserController extends Controller
 
     }
     public function postUserImage($id,Request $request){
-        if (!Session::get('user_id') || !Funcs::_up('USER')) {
-            abort(403);
-        }
         $dir = storage_path("app/public/media/user");
         if($request->hasfile('user_image')) {
             $request->validate([
@@ -272,9 +243,6 @@ class UserController extends Controller
     }
 
     public function exportUsers(Request $request){
-        if (!Session::get('user_id') || !Funcs::_up('USER')) {
-            abort(403);
-        }
         $recordset = User::where('deleted','=',false)
             ->orderBy('surname')->orderBy('firstname')
             ->get();
@@ -295,9 +263,6 @@ class UserController extends Controller
     }
 
     public function getUserActivity($id,Request $request){
-        if (!Session::get('user_id') || !Funcs::_up('USER')) {
-            abort(403);
-        }
         $recordset = DB::table('users AS u')
             ->select('cl.uid','cl.created_at','cl.activity','cl.url','u.fullname','u.username')
             ->selectRaw('(SELECT IF(`data` IS NULL, 0, 1)) AS hasdata')
@@ -322,9 +287,6 @@ class UserController extends Controller
     }
 
     public function getActivityByDate($d, Request $request) {
-        if (!Session::get('user_id') || !Funcs::_up('USER')) {
-            abort(403);
-        }
         $recordset = DB::table('users AS u')
             ->select('cl.uid','cl.created_at','cl.activity','cl.url','u.fullname')
             ->selectRaw('(SELECT IF(`data` IS NULL, 0, 1)) AS hasdata')
@@ -349,9 +311,6 @@ class UserController extends Controller
     }
 
     public function viewData($id){
-        if (!Session::get('user_id') || !Funcs::_up('USER')) {
-            abort(403);
-        }
         $cl = ChangeLog::find($id);
         if(!$cl) {
             return response('<h1 class="error">No matching record!</h1>');
@@ -366,9 +325,6 @@ class UserController extends Controller
     }
 
     public function exportActivity(Request $request){
-        if (!Session::get('user_id') || !Funcs::_up('USER')) {
-            abort(403);
-        }
         $recordset = DB::table('users AS u')
             ->select('cl.uid','cl.created_at','cl.activity','cl.url','u.fullname','u.username')
             ->selectRaw("REPLACE(cl.`data`,'\"','') AS `data`")

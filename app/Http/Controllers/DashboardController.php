@@ -13,13 +13,6 @@ class DashboardController extends Controller
 {
     // main app dashboard
     public function showDashboard() {
-        if (!Session::get('user_id')) {
-            return redirect()->route('default');
-        }
-        if (!Funcs::_up('ATTENDANCE')) {
-            abort(403,'Unauthorized');
-            exit;
-        }
         $start=date('Y-m-d',strtotime('-7 days'));
         $end=date('Y-m-d');
         $recordset=DB::table('employees AS e')
@@ -111,6 +104,5 @@ class DashboardController extends Controller
             ]
         );
     }
-
 
 }

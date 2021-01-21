@@ -12,9 +12,25 @@ class AppFuncsProvider {
 
     // APP-SPECIFIC FUNCTIONS ===================================
 
-    // alert JS options
+    // toastr.js alert options
     public static function toastr_options(){
-        return '"closeButton": false,"debug": false,"newestOnTop": false,"progressBar": false,"positionClass": "toast-top-center","preventDuplicates": false,"onclick": null,"showDuration": "250","hideDuration": "250","timeOut": "2000","extendedTimeOut": "1000","showEasing": "swing","hideEasing": "linear","showMethod": "fadeIn","hideMethod": "fadeOut"';
+        return '
+        "closeButton": false,
+        "debug": false,
+        "newestOnTop": false,
+        "progressBar": false,
+        "positionClass": "toast-top-center",
+        "preventDuplicates": false,
+        "onclick": null,
+        "showDuration": "250",
+        "hideDuration": "250",
+        "timeOut": "2000",
+        "extendedTimeOut": "1000",
+        "showEasing": "swing",
+        "hideEasing": "linear",
+        "showMethod": "fadeIn",
+        "hideMethod": "fadeOut"
+        ';
     }
 
     public static function _up($c) {
@@ -37,7 +53,7 @@ class AppFuncsProvider {
                     ->get()
                     ->toArray();
                 foreach($uprs as $r) {
-                    $tmp[] = $r->ermission_code;
+                    $tmp[] = $r->permission_code;
                 }
                 //pp($tmp); exit;
                 Session::put('user.permissions',$tmp);
@@ -64,8 +80,9 @@ class AppFuncsProvider {
         }
         return $mins_pres;
     }
+
     // calculate minutes break per day
-    function calcMinsBreak($day_activity_log) {
+    public function calcMinsBreak($day_activity_log) {
         $mins_break = 0;
         if($day_activity_log && 'ENTRY' == reset($day_activity_log)['activity'] && 'EXIT' == end($day_activity_log)['activity']) {
             foreach($day_activity_log as $i=>$e) {

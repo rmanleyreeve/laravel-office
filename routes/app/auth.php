@@ -3,15 +3,11 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 
-// AUTHENTICATION #####################################################################################################
+// AUTHENTICATION ########################################################################
 
-// default
-Route::get('/', [AuthController::class,'default'])->name('default');
-
-// login
+// login, logout
+Route::get('/login', [AuthController::class,'login'])->name('login');
 Route::post('/login', [AuthController::class,'authenticate']);
-
-// logout
 Route::get('/logout', [AuthController::class,'logout']);
 
 // forgot password
@@ -22,6 +18,14 @@ Route::post('/forgot-password', [AuthController::class,'postForgotPassword']);
 Route::get('/reset/{u}/{t}/{h}', [AuthController::class,'getResetPassword']);
 Route::post('/reset', [AuthController::class,'postResetPassword']);
 
-// forgot password
-Route::get('/change-password', [AuthController::class,'getChangePassword']);
-Route::post('/change-password', [AuthController::class,'postChangePassword']);
+Route::middleware('session')->group(function () {
+
+    // app entrypoint
+    Route::get('/', [AuthController::class,'default'])->name('default');
+
+    // forgot password
+    Route::get('/change-password', [AuthController::class,'getChangePassword']);
+    Route::post('/change-password', [AuthController::class,'postChangePassword']);
+
+});
+

@@ -3,42 +3,45 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 
-// list
-Route::get ('/users', [UserController::class, 'getUsers']);
+Route::middleware('session:USER')->group(function () {
 
-// add
-Route::get ('/users/add', [UserController::class, 'getAddUser']);
-Route::post ('/users/add', [UserController::class, 'postAddUser']);
+    // list
+    Route::get ('/users', [UserController::class, 'getUsers']);
 
-// view (modal)
-Route::get ('/users/{id}/view', [UserController::class, 'viewUser']);
+    // add
+    Route::get ('/users/add', [UserController::class, 'getAddUser']);
+    Route::post ('/users/add', [UserController::class, 'postAddUser']);
 
-// edit
-Route::get ('/users/{id}/edit', [UserController::class, 'getEditUser']);
-Route::post ('/users/{id}/edit', [UserController::class, 'postEditUser']);
+    // view (modal)
+    Route::get ('/users/{id}/view', [UserController::class, 'viewUser']);
 
-// delete
-Route::get ('/users/{id}/delete', [UserController::class, 'deleteUser']);
+    // edit
+    Route::get ('/users/{id}/edit', [UserController::class, 'getEditUser']);
+    Route::post ('/users/{id}/edit', [UserController::class, 'postEditUser']);
 
-// profile
-Route::get ('/users/{id}/profile', [UserController::class, 'getProfile']);
+    // delete
+    Route::get ('/users/{id}/delete', [UserController::class, 'deleteUser']);
 
-// image (modal)
-Route::get ('/users/{id}/image', [UserController::class, 'getUserImage']);
-Route::post ('/users/{id}/image', [UserController::class, 'postUserImage']);
+    // profile
+    Route::get ('/users/{id}/profile', [UserController::class, 'getProfile']);
 
-// export
-Route::get ('/users/{filename}.csv', [UserController::class, 'exportUsers']);
+    // image (modal)
+    Route::get ('/users/{id}/image', [UserController::class, 'getUserImage']);
+    Route::post ('/users/{id}/image', [UserController::class, 'postUserImage']);
 
-// activity per user
-Route::get ('/users/{id}/activity', [UserController::class, 'getUserActivity']);
+    // export
+    Route::get ('/users/{filename}.csv', [UserController::class, 'exportUsers']);
 
-// all activity by date
-Route::get ('/users/activity/date/{d}', [UserController::class, 'getActivityByDate']);
+    // activity per user
+    Route::get ('/users/{id}/activity', [UserController::class, 'getUserActivity']);
 
-// data (modal)
-Route::get ('/users/activity/data/{id}', [UserController::class, 'viewData']);
+    // all activity by date
+    Route::get ('/users/activity/date/{d}', [UserController::class, 'getActivityByDate']);
 
-// export all activity
-Route::get ('/users/activity/export/{filename}.csv', [UserController::class, 'exportActivity']);
+    // data (modal)
+    Route::get ('/users/activity/data/{id}', [UserController::class, 'viewData']);
 
+    // export all activity
+    Route::get ('/users/activity/export/{filename}.csv', [UserController::class, 'exportActivity']);
+
+});

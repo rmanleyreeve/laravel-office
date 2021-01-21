@@ -3,28 +3,33 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\EmployeeController;
 
-// list
-Route::get ('/employees', [EmployeeController::class, 'getEmployees']);
+Route::middleware('session:EMPLOYEE')->group(function () {
 
-// add
-Route::get ('/employees/add', [EmployeeController::class, 'getAddEmployee']);
-Route::post ('/employees/add', [EmployeeController::class, 'postAddEmployee']);
+    // list
+    Route::get('/employees',[EmployeeController::class,'getEmployees']);
 
-// view (modal)
-Route::get ('/employees/{id}/view', [EmployeeController::class, 'viewEmployee']);
+    // add
+    Route::get('/employees/add',[EmployeeController::class,'getAddEmployee']);
+    Route::post('/employees/add',[EmployeeController::class,'postAddEmployee']);
 
-// edit
-Route::get ('/employees/{id}/edit', [EmployeeController::class, 'getEditEmployee']);
-Route::post ('/employees/{id}/edit', [EmployeeController::class, 'postEditEmployee']);
+    // view (modal)
+    Route::get('/employees/{id}/view',[EmployeeController::class,'viewEmployee']);
 
-// delete
-Route::get ('/employees/{id}/delete', [EmployeeController::class, 'deleteEmployee']);
+    // edit
+    Route::get('/employees/{id}/edit',[EmployeeController::class,'getEditEmployee']);
+    Route::post('/employees/{id}/edit',[EmployeeController::class,'postEditEmployee']);
 
-// export
-Route::get ('/employees/{filename}.csv', [EmployeeController::class, 'exportEmployees']);
+    // delete
+    Route::get('/employees/{id}/delete',[EmployeeController::class,'deleteEmployee']);
+
+    // export
+    Route::get('/employees/{filename}.csv',[EmployeeController::class,'exportEmployees']);
+
+});
 
 // image
-Route::get ('/employees/{id}/image', [EmployeeController::class, 'getEmployeeImage']);
+Route::get('/employees/{id}/image',[EmployeeController::class,'getEmployeeImage'])->middleware('session');
+
 
 
 

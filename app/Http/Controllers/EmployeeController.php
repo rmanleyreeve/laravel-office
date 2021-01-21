@@ -16,9 +16,6 @@ use Illuminate\Support\Facades\Schema;
 class EmployeeController extends Controller
 {
     public function getEmployees() {
-        if (!Session::get('user_id') || !Funcs::_up('EMPLOYEE')) {
-            abort(403);
-        }
         $employees = Employee::where('deleted','=',false)
             ->orderBy('surname')->orderBy('firstname')
             ->get();
@@ -30,9 +27,6 @@ class EmployeeController extends Controller
     }
 
     public function getAddEmployee() {
-        if (!Session::get('user_id') || !Funcs::_up('EMPLOYEE')) {
-            abort(403);
-        }
         return view('global.master',[
                 'content'=>'employees/add-edit',
                 'action'=>'Add New',
@@ -42,9 +36,6 @@ class EmployeeController extends Controller
         );
     }
     public function postAddEmployee(Request $request) {
-        if (!Session::get('user_id') || !Funcs::_up('EMPLOYEE')) {
-            abort(403);
-        }
         //print_r($request->all()); exit;
         $dataObj = new Employee();
         $vars = Arr::except($request->all(), ['_token']);
@@ -63,9 +54,6 @@ class EmployeeController extends Controller
     }
 
     public function viewEmployee($id){
-        if (!Session::get('user_id') || !Funcs::_up('EMPLOYEE')) {
-            abort(403);
-        }
         $employee = Employee::where('deleted','=',false)->find($id);
         if(!$employee) {
             return response('<h1 class="error">No matching employee!</h1>');
@@ -80,9 +68,6 @@ class EmployeeController extends Controller
     }
 
     public function getEditEmployee($id,Request $request) {
-        if (!Session::get('user_id') || !Funcs::_up('EMPLOYEE')) {
-            abort(403);
-        }
         $employee = Employee::where('deleted','=',false)->find($id);
         if(!$employee) {
             $request->session()->put('alert', ['type'=>'error','msg'=>'No matching employee!']);
@@ -98,9 +83,6 @@ class EmployeeController extends Controller
         }
     }
     public function postEditEmployee($id,Request $request) {
-        if (!Session::get('user_id') || !Funcs::_up('EMPLOYEE')) {
-            abort(403);
-        }
         //print_r($request->all()); exit;
         $dataObj = Employee::where('deleted','=',false)->find($id);
         if(!$dataObj) {
@@ -126,9 +108,6 @@ class EmployeeController extends Controller
     }
 
     public function deleteEmployee($id, Request $request){
-        if (!Session::get('user_id') || !Funcs::_up('EMPLOYEE')) {
-            abort(403);
-        }
         $dataObj = Employee::where('deleted','=',false)->find($id);
         if(!$dataObj) {
             $request->session()->put('alert', ['type'=>'error','msg'=>'No matching employee!']);
@@ -141,9 +120,6 @@ class EmployeeController extends Controller
     }
 
     public function exportEmployees(){
-        if (!Session::get('user_id') || !Funcs::_up('EMPLOYEE')) {
-            abort(403);
-        }
         $recordset = Employee::where('deleted','=',false)
             ->orderBy('surname')->orderBy('firstname')
             ->get();

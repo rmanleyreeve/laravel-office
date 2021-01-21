@@ -15,9 +15,6 @@ use App\Providers\AppFuncsProvider as Funcs;
 class AttendanceController extends Controller {
 
     public function getDailyActivity($date,$id) {
-        if (!Session::get('user_id') || !Funcs::_up('ATTENDANCE')) {
-            abort(403);
-        }
         $recordset=DB::table('activity_log AS al')
             ->join('employees AS e',function($join) {
                 $join->on('e.uid','al.employee_fk')->where('e.active','=',TRUE)
@@ -40,9 +37,6 @@ class AttendanceController extends Controller {
     }
 
     public function getWeeklyAttendance($year,$week) {
-        if (!Session::get('user_id') || !Funcs::_up('ATTENDANCE')) {
-            abort(403);
-        }
         $weekstart=strtotime(sprintf("%4dW%02d",$year,$week));
         $start=date('Y-m-d',$weekstart);
         $end=date('Y-m-d',strtotime('+1 week',$weekstart));
@@ -111,9 +105,6 @@ class AttendanceController extends Controller {
     }
 
     public function getMonthlyAttendance($year,$month) {
-        if (!Session::get('user_id') || !Funcs::_up('ATTENDANCE')) {
-            abort(403);
-        }
         $s=strtotime($year.'-'.$month.'-01');
         $start=date('Y-m-d H:i:s',$s);
         $e=strtotime('+1 month',strtotime($start));

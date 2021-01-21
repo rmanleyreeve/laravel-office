@@ -15,9 +15,6 @@ use Illuminate\Support\Facades\Session;
 class AbsenceController extends Controller
 {
     public function getCalendar(){
-        if (!Session::get('user_id') || !Funcs::_up('ABSENCE')) {
-            abort(403);
-        }
         $recordset = Absence::where('deleted', '=',false)
             ->with('employee_name')
             ->orderBy('absence_date')
@@ -86,9 +83,6 @@ class AbsenceController extends Controller
     }
 
     public function getAddAbsence(){
-        if (!Session::get('user_id') || !Funcs::_up('ABSENCE')) {
-            abort(403);
-        }
         $sql = "SELECT uid,surname,firstname,role FROM employees WHERE active=TRUE AND deleted=FALSE ORDER BY surname,firstname;";
         $employees = Employee::where('active','=',true)->where('deleted','=',false)
             ->orderBy('surname')->orderBy('firstname')
@@ -105,9 +99,6 @@ class AbsenceController extends Controller
 
     }
     public function postAddAbsence(Request $request){
-        if (!Session::get('user_id') || !Funcs::_up('ABSENCE')) {
-            abort(403);
-        }
         //print_r($request->all()); exit();
         if($request->absence_date) {
             Absence::create($request->except(['start_date','end_date','_token']));
@@ -135,9 +126,6 @@ class AbsenceController extends Controller
     }
 
     public function getEditAbsence($id){
-        if (!Session::get('user_id') || !Funcs::_up('ABSENCE')) {
-            abort(403);
-        }
         $res = Absence::find($id);
         if(!$res) {
             echo '<h1 class="error">No matching record!</h1>';
@@ -153,9 +141,6 @@ class AbsenceController extends Controller
 
     }
     public function postEditAbsence($id,Request $request){
-        if (!Session::get('user_id') || !Funcs::_up('ABSENCE')) {
-            abort(403);
-        }
         //print_r($request->all()); exit();
         $dataObj = Absence::find($id);
         if(!$dataObj) {
@@ -171,9 +156,6 @@ class AbsenceController extends Controller
     }
 
     public function deleteAbsence($id, Request $request){
-        if (!Session::get('user_id') || !Funcs::_up('ABSENCE')) {
-            abort(403);
-        }
         $dataObj = Absence::find($id);
         if(!$dataObj) {
             $request->session()->put('alert', ['type'=>'success','msg'=>'No matching record!']);
@@ -187,9 +169,6 @@ class AbsenceController extends Controller
     }
 
     public function exportAbsences(){
-        if (!Session::get('user_id') || !Funcs::_up('ABSENCE')) {
-            abort(403);
-        }
         $recordset = Absence::select('absences.*')
             ->selectRaw("CONCAT(e.firstname,' ',e.surname) AS employee_fk")
             ->join('employees AS e','e.uid','=','absences.employee_fk')

@@ -13,15 +13,13 @@ use Illuminate\Support\Facades\Mail;
 
 class AuthController extends Controller
 {
-    public function default(Request $request)
+    public function default()
     {
-        if(Session::get('user_id')) {
-            return redirect()->route('home');
-        } else {
-            return view('auth/login');
-        }
+        return redirect()->route('home');
     }
-
+    public function login(){
+        return view('auth/login');
+    }
     public function authenticate(Request $request)
     {
         $credentials = $request->only('username', 'password');
@@ -44,7 +42,7 @@ class AuthController extends Controller
                 $uprs = DB::table('user_permissions')->select('permission_code')->get()->toArray();
             } else {
                 $uprs = DB::table('link_user_permission AS lup')
-                    ->join('user_permissions AS up','up.id','='.'lup.permission_fk')
+                    ->join('user_permissions AS up','up.id','=','lup.permission_fk')
                     ->where('lup.user_fk','=',intval($user['user_id']))
                     ->get()
                     ->toArray();
@@ -63,7 +61,6 @@ class AuthController extends Controller
         $request->session()->put('alert', ['type'=>'error','msg'=>'Login Failed']);
         return redirect()->route('default');
     }
-
     public function logout(Request $request){
         $request->session()->flush();
         $request->session()->put('alert', ['type'=>'info','msg'=>'You are now logged out of the system']);
@@ -156,7 +153,6 @@ class AuthController extends Controller
         return view('auth/change-password');
     }
     public function postChangePassword(Request $request){
-        if (!Session::get('user_id')) { abort(403); }
         $dataObj = User::find(Session::get('user_id'));
         if($dataObj && password_verify($request->oldPassword,$dataObj->password)) {
             $dataObj->password = password_hash($request->newPassword,PASSWORD_BCRYPT);
@@ -170,6 +166,5 @@ class AuthController extends Controller
             return redirect()->route('home');
         }
     }
-
 
 }

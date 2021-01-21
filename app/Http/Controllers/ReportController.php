@@ -13,9 +13,6 @@ use Illuminate\Support\Facades\Session;
 class ReportController extends Controller
 {
     public function getOverall(){
-        if (!Session::get('user_id') || !Funcs::_up('REPORT')) {
-            abort(403);
-        }
         return view('global.master',[
                 'content'=>'reports/overall',
                 'posted'=> false,
@@ -23,9 +20,6 @@ class ReportController extends Controller
         );
     }
     public function postOverall(Request $request){
-        if (!Session::get('user_id') || !Funcs::_up('REPORT')) {
-            abort(403);
-        }
         //print_r($request->all()); exit;
         $start_date = $request->start_date;
         $end_date = $request->end_date;
@@ -62,9 +56,6 @@ class ReportController extends Controller
     }
 
     public function getIndividual(){
-        if (!Session::get('user_id') || !Funcs::_up('REPORT')) {
-            abort(403);
-        }
         $employees = Employee::where('deleted','=',false)
             ->orderBy('surname')->orderBy('firstname')
             ->get();
@@ -79,9 +70,6 @@ class ReportController extends Controller
         );
     }
     public function postIndividual(Request $request){
-        if (!Session::get('user_id') || !Funcs::_up('REPORT')) {
-            abort(403);
-        }
         //print_r($request->all()); exit;
         $uid = intval($request->uid);
         $start_date = $request->start_date;
@@ -128,9 +116,6 @@ class ReportController extends Controller
     }
 
     public function getAmended(){
-        if (!Session::get('user_id') || !Funcs::_up('REPORT')) {
-            abort(403);
-        }
         $recordset = DB::table('activity_log AS al')
             ->select('al.*','e.uid AS employee_id','e.firstname','e.surname','e.role')
             ->join('employees AS e','e.uid','=','al.employee_fk')

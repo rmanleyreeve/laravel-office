@@ -14,9 +14,6 @@ use Monolog\Utils;
 class AdminController extends Controller
 {
     public function getAmendAttendance(){
-        if (!Session::get('user_id') || !Funcs::_up('ADMIN')) {
-            abort(403);
-        }
         $employees = Employee::where('deleted',false)
             ->orderBy('surname')->orderBy('firstname')
             ->select('uid','surname','firstname','role')
@@ -29,9 +26,6 @@ class AdminController extends Controller
     }
 
     public function postAmendAttendance(Request $request) {
-        if (!Session::get('user_id') || !Funcs::_up('ADMIN')) {
-            abort(403);
-        }
         //print_r($request->all()); exit;
         $uid = intval($request->uid);
         $day = $request->amend_date;
@@ -59,9 +53,6 @@ class AdminController extends Controller
     }
 
     public function executeAmendAttendance(Request $request) {
-        if (!Session::get('user_id') || !Funcs::_up('ADMIN')) {
-            abort(403);
-        }
         //print_r($request->all()); exit;
         DB::beginTransaction();
         foreach ($request->changes as $uid=>$t){
@@ -83,9 +74,6 @@ class AdminController extends Controller
     }
 
     public function checkAttendanceErrors() {
-        if (!Session::get('user_id') || !Funcs::_up('ADMIN')) {
-            abort(403);
-        }
         $res = DB::table('activity_log AS al')
             ->select('al.time_logged','al.activity','al.employee_fk','e.uid','e.firstname','e.surname')
             ->selectRaw('DATE(al.time_logged) AS day,TIME(al.time_logged) AS clock_time')
@@ -122,9 +110,6 @@ class AdminController extends Controller
     }
 
     public function getRepairErrors($id,$date) {
-        if (!Session::get('user_id') || !Funcs::_up('ADMIN')) {
-            abort(403);
-        }
         $res = DB::table('activity_log AS al')
             ->select('al.employee_fk','al.time_logged','al.activity','e.firstname','e.surname')
             ->selectRaw('TIME(al.time_logged) AS clock_time')
@@ -145,9 +130,6 @@ class AdminController extends Controller
     }
 
     public function postRepairErrors($id,$date,Request $request) {
-        if (!Session::get('user_id') || !Funcs::_up('ADMIN')) {
-            abort(403);
-        }
         //print_r($request->all()); exit;
         $dataObj = new ActivityLog();
         $dataObj->activity = $request->activity;
@@ -161,9 +143,6 @@ class AdminController extends Controller
     }
 
     public function getManualEntry(){
-        if (!Session::get('user_id') || !Funcs::_up('ADMIN')) {
-            abort(403);
-        }
         $employees = Employee::where('active','=',true)
             ->where('deleted','=',false)
             ->select('uid','surname','firstname','role')
@@ -177,9 +156,6 @@ class AdminController extends Controller
     }
 
     public function postManualEntry(Request $request){
-        if (!Session::get('user_id') || !Funcs::_up('ADMIN')) {
-            abort(403);
-        }
         //print_r($request->all()); exit;
         $dataObj = new ActivityLog();
         $dataObj->employee_fk = intval($request->employee_fk);

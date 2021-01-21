@@ -1,4 +1,3 @@
-<x-master>
 <section class="content">
 	<div class="page-heading">
 		<h1>BLANK PAGE</h1>
@@ -13,4 +12,3 @@ $(function(){
 
 });
 </script>
-</x-master>

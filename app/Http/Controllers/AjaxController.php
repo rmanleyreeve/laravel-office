@@ -11,9 +11,6 @@ use App\Providers\AppFuncsProvider as Funcs;
 class AjaxController extends Controller
 {
     public function getDashboardAttendance() {
-        if (!Session::get('user_id') || !Funcs::_up('ATTENDANCE')) {
-            die("{}");
-        }
         $start=date('Y-m-d 00:00:00');
         $end=date('Y-m-d 23:59:59');
         $res=DB::table('employees AS e')
@@ -50,9 +47,6 @@ class AjaxController extends Controller
     }
 
     public function getNotifications() {
-        if (!Session::get('user_id') || !Funcs::_up('ATTENDANCE')) {
-            die("{}");
-        }
         $start=date('Y-m-d 00:00:00');
         $end=date('Y-m-d 23:59:59');
         $recordset=DB::table('activity_log AS al')
@@ -76,8 +70,7 @@ class AjaxController extends Controller
     }
 
     public function updateNotifications(Request $request) {
-        if (!Session::get('user_id') || !Funcs::_up('ATTENDANCE')) { die(""); }
-        //print_r($_POST); exit;
+        //print_r($request->all()); exit;
         $uid = json_decode($request->get('uid'),true);
         DB::table('activity_log')
             ->whereIn('uid',$uid)
@@ -86,9 +79,6 @@ class AjaxController extends Controller
     }
 
     public function countNotifications() {
-        if (!Session::get('user_id') || !Funcs::_up('ATTENDANCE')) {
-            die("");
-        }
         $c=Session::get('notification_count') ?? '"0"';
         $content='{ "count":'.$c.' }';
         return response($content)
@@ -97,9 +87,6 @@ class AjaxController extends Controller
     }
 
     public function getAlerts() {
-        if (!Session::get('user_id') || !Funcs::_up('ATTENDANCE')) {
-            die("{}");
-        }
         $res=DB::table('activity_log AS al')
             ->join('employees AS e','e.uid','=','al.employee_fk')
             ->where('e.active','=',TRUE)
@@ -137,9 +124,6 @@ class AjaxController extends Controller
     }
 
     public function getData() {
-        if (!Session::get('user_id')) {
-            return redirect('/');
-        }
         $start=date('Y-m-d 00:00:00');
         $end=date('Y-m-d 23:59:59');
         $res=DB::table('employees AS e')
@@ -170,7 +154,6 @@ class AjaxController extends Controller
     }
 
     public function checkUsername(Request $request) {
-        if (!Session::get('user_id') || !Funcs::_up('USER')) { abort(403); }
         $res = DB::table('users')
             ->where('username','=',$request->get('username'))
             ->first();
@@ -179,9 +162,6 @@ class AjaxController extends Controller
     }
 
     public function checkAttendance() {
-        if (!Session::get('user_id') || !Funcs::_up('ADMIN')) {
-            die('{}');
-        }
         $res=DB::table('activity_log AS al')
             ->join('employees AS e','e.uid','=','al.employee_fk')
             ->where('al.time_logged','<',date('Y-m-d'))
