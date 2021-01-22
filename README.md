@@ -1,5 +1,11 @@
 # laravel-office
-Laravel port of SME office employee time management system, originally developed in F3
+![image 1](resources/screenshots/screenshot1.png) ![image 1](resources/screenshots/screenshot2.png)
+![image 1](resources/screenshots/screenshot3.png)
 
-Admin system developed on Fat-Free Framework with Bootstrap 3/jQuery front end. UI is AdminBSB-Sensitive by gurayyarar
-Trying a port to Laravel & Docker as part of a quick Laravel refresher!
+Laravel port of SME office employee time management system
+
+Backend originally developed on [F3](https://github.com/bcosca/fatfree)
+UI is AdminBSB-Sensitive by @gurayyarar using Bootstrap 3 & jQuery.
+
+Porting to Laravel 8 & building Docker image as part of a quick Laravel refresher.
+Session-based authentication and user roles ported across to custom middleware. 

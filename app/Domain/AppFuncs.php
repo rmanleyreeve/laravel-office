@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Providers;
+namespace App\Domain;
 
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\DB;
@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\DB;
 define('FORMAT_CURRENCY_GBP_SIMPLE','"£"#,##0.00_-');
 define('FORMAT_DATE_DATETIME_CUSTOM','d/m/yy hh:mm:ss');
 
-class AppFuncsProvider {
+class AppFuncs {
 
     // APP-SPECIFIC FUNCTIONS ===================================
 

@@ -5,8 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\DB;
-use App\Providers\AppUtilsProvider as Utils;
-use App\Providers\AppFuncsProvider as Funcs;
+use App\Domain\AppUtils as Utils;
+use App\Domain\AppFuncs as Funcs;
 
 
 class DashboardController extends Controller

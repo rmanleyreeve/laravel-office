@@ -1,14 +1,14 @@
 <?php
 
 
-namespace App\Providers;
+namespace App\Domain;
 
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Request;
 use App\Models\ChangeLog;
 
-class AppUtilsProvider {
+class AppUtils {
 
     // log changes to database
     public static function chlog($a, $obj = NULL) {

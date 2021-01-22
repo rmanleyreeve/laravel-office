@@ -2,7 +2,7 @@
 
 namespace App\Http\Middleware;
 
-use App\Providers\AppFuncsProvider as Funcs;
+use App\Domain\AppFuncs as Funcs;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;

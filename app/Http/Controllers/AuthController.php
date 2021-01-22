@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use App\Providers\AppUtilsProvider as Utils;
+use App\Domain\AppUtils as Utils;
 use App\Models\User;
 use Illuminate\Support\Facades\Mail;
 

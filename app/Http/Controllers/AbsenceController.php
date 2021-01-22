@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Absence;
 use App\Models\Employee;
-use App\Providers\AppFuncsProvider as Funcs;
-use App\Providers\AppUtilsProvider as Utils;
+use App\Domain\AppFuncs as Funcs;
+use App\Domain\AppUtils as Utils;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
