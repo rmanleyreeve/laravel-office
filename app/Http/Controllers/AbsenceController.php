@@ -140,7 +140,7 @@ class AbsenceController extends Controller
         }
 
     }
-    public function postEditAbsence($id,Request $request){
+    public function postEditAbsence(Request $request, $id){
         //print_r($request->all()); exit();
         $dataObj = Absence::find($id);
         if(!$dataObj) {
@@ -155,7 +155,7 @@ class AbsenceController extends Controller
         return redirect()->to('/absences');
     }
 
-    public function deleteAbsence($id, Request $request){
+    public function deleteAbsence(Request $request, $id){
         $dataObj = Absence::find($id);
         if(!$dataObj) {
             $request->session()->put('alert', ['type'=>'success','msg'=>'No matching record!']);

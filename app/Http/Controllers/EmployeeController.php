@@ -67,7 +67,7 @@ class EmployeeController extends Controller
         }
     }
 
-    public function getEditEmployee($id,Request $request) {
+    public function getEditEmployee(Request $request, $id) {
         $employee = Employee::where('deleted','=',false)->find($id);
         if(!$employee) {
             $request->session()->put('alert', ['type'=>'error','msg'=>'No matching employee!']);
@@ -82,7 +82,7 @@ class EmployeeController extends Controller
             );
         }
     }
-    public function postEditEmployee($id,Request $request) {
+    public function postEditEmployee(Request $request, $id) {
         //print_r($request->all()); exit;
         $dataObj = Employee::where('deleted','=',false)->find($id);
         if(!$dataObj) {
@@ -107,7 +107,7 @@ class EmployeeController extends Controller
         }
     }
 
-    public function deleteEmployee($id, Request $request){
+    public function deleteEmployee(Request $request, $id){
         $dataObj = Employee::where('deleted','=',false)->find($id);
         if(!$dataObj) {
             $request->session()->put('alert', ['type'=>'error','msg'=>'No matching employee!']);

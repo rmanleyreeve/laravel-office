@@ -98,7 +98,7 @@ class UserController extends Controller
         }
     }
 
-    public function getEditUser($id,Request $request) {
+    public function getEditUser(Request $request, $id) {
         $user = User::where('deleted','=',false)->find($id);
         if(!$user) {
             $request->session()->put('alert', ['type'=>'error','msg'=>'No matching user!']);
@@ -129,7 +129,7 @@ class UserController extends Controller
             ]
         );
     }
-    public function postEditUser($id,Request $request) {
+    public function postEditUser(Request $request, $id) {
         //print_r($request->all()); exit;
         $dataObj = User::where('deleted','=',false)->find($id);
         if(!$dataObj) {
@@ -175,7 +175,7 @@ class UserController extends Controller
         }
     }
 
-    public function deleteUser($id, Request $request){
+    public function deleteUser(Request $request, $id){
         $dataObj = User::where('deleted','=',false)->find($id);
         if(!$dataObj) {
             $request->session()->put('alert', ['type'=>'error','msg'=>'No matching user!']);
@@ -187,7 +187,7 @@ class UserController extends Controller
         return redirect()->to('/users');
     }
 
-    public function getProfile($id,Request $request){
+    public function getProfile(Request $request, $id){
         $user = User::where('deleted','=',false)->find($id);
         if(!$user) {
             $request->session()->put('alert', ['type'=>'error','msg'=>'No matching user!']);
@@ -207,7 +207,7 @@ class UserController extends Controller
         }
     }
 
-    public function getUserImage($id,Request $request){
+    public function getUserImage(Request $request, $id){
         $user = User::where('deleted','=',false)->find($id);
         if(!$user) {
             return response('<h1 class="error">No matching user!</h1>');
@@ -220,7 +220,7 @@ class UserController extends Controller
         }
 
     }
-    public function postUserImage($id,Request $request){
+    public function postUserImage(Request $request, $id){
         $dir = storage_path("app/public/media/user");
         if($request->hasfile('user_image')) {
             $request->validate([
@@ -262,7 +262,7 @@ class UserController extends Controller
         }
     }
 
-    public function getUserActivity($id,Request $request){
+    public function getUserActivity(Request $request, $id){
         $recordset = DB::table('users AS u')
             ->select('cl.uid','cl.created_at','cl.activity','cl.url','u.fullname','u.username')
             ->selectRaw('(SELECT IF(`data` IS NULL, 0, 1)) AS hasdata')
@@ -286,7 +286,7 @@ class UserController extends Controller
         );
     }
 
-    public function getActivityByDate($d, Request $request) {
+    public function getActivityByDate(Request $request, $d) {
         $recordset = DB::table('users AS u')
             ->select('cl.uid','cl.created_at','cl.activity','cl.url','u.fullname')
             ->selectRaw('(SELECT IF(`data` IS NULL, 0, 1)) AS hasdata')

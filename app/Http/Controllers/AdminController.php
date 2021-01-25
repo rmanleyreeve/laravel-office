@@ -129,7 +129,7 @@ class AdminController extends Controller
         );
     }
 
-    public function postRepairErrors($id,$date,Request $request) {
+    public function postRepairErrors(Request $request,$id,$date) {
         //print_r($request->all()); exit;
         $dataObj = new ActivityLog();
         $dataObj->activity = $request->activity;

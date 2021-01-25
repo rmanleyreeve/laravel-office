@@ -106,7 +106,7 @@ class AuthController extends Controller
         return view('auth/forgot-pass-ok');
     }
 
-    public function getResetPassword($u,$t,$h, Request $request){
+    public function getResetPassword(Request $request,$u,$t,$h){
         if(($t+86400) < time()) {
             // check 24 hour expiry
             $request->session()->put('alert', ['type'=>'error','msg'=>'This reset code has expired!']);
