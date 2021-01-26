@@ -121,7 +121,7 @@ class AbsenceController extends Controller
             DB::commit();
         }
         Utils::chlog("Added employee absence",$request->except('_token'));
-        $request->session()->put('alert', ['type'=>'success','msg'=>'The employee absence has been added to the system.']);
+        $request->session()->flash('alert', ['type'=>'success','msg'=>'The employee absence has been added to the system.']);
         return redirect()->to('/absences');
     }
 
@@ -144,13 +144,13 @@ class AbsenceController extends Controller
         //print_r($request->all()); exit();
         $dataObj = Absence::find($id);
         if(!$dataObj) {
-            $request->session()->put('alert', ['type'=>'success','msg'=>'No matching record!']);
+            $request->session()->flash('alert', ['type'=>'error','msg'=>'No matching record!']);
         } else {
             $prev = $dataObj->toArray();
             $dataObj->update($request->except('_token'));
             $dataObj->save();
             Utils::chlog("Edited employee absence {$id}",['BEFORE'=>$prev,'AFTER'=>$dataObj->toArray(),'DIFF'=>array_diff_assoc($dataObj->toArray(),$prev)]);
-            $request->session()->put('alert', ['type'=>'success','msg'=>'The employee absence has been updated in the system.']);
+            $request->session()->flash('alert', ['type'=>'success','msg'=>'The employee absence has been updated in the system.']);
         }
         return redirect()->to('/absences');
     }
@@ -158,12 +158,12 @@ class AbsenceController extends Controller
     public function deleteAbsence(Request $request, $id){
         $dataObj = Absence::find($id);
         if(!$dataObj) {
-            $request->session()->put('alert', ['type'=>'success','msg'=>'No matching record!']);
+            $request->session()->flash('alert', ['type'=>'error','msg'=>'No matching record!']);
         } else {
             $dataObj->deleted = true;
             $dataObj->save();
             Utils::chlog("Deleted absence {$id}",$dataObj->toArray());
-            $request->session()->put('alert', ['type'=>'success','msg'=>'The selected absence record has been deleted from the system.']);
+            $request->session()->flash('alert', ['type'=>'success','msg'=>'The selected absence record has been deleted from the system.']);
             return redirect()->to('/absences');
         }
     }

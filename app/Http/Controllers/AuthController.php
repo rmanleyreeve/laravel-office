@@ -55,16 +55,16 @@ class AuthController extends Controller
             $user['permissions'] = $tmp;
             $request->session()->put('user',$user);
             $request->session()->put('user_id',$user['user_id']);
-            $request->session()->put('alert', ['type'=>'success','msg'=>'You are now logged in to the system']);
+            $request->session()->flash('alert',['type'=>'success','msg'=>'You are now logged in to the system']);
             return redirect()->route('home');
         }
-        $request->session()->put('alert', ['type'=>'error','msg'=>'Login Failed']);
-        return redirect()->route('default');
+        $request->session()->flash('alert', ['type'=>'error','msg'=>'Login Failed']);
+        return redirect()->route('login');
     }
     public function logout(Request $request){
         $request->session()->flush();
-        $request->session()->put('alert', ['type'=>'info','msg'=>'You are now logged out of the system']);
-        return redirect()->route('default');
+        $request->session()->flash('alert',['type'=>'success','msg'=>'You are now logged out of the system']);
+        return redirect()->route('login');
     }
 
     public function getForgotPassword(){
@@ -73,7 +73,7 @@ class AuthController extends Controller
     public function postForgotPassword(Request $request){
         $dataObj = User::where('active','=',1)->where('username','=',$request->username)->first();
         if(!$dataObj) {
-            $request->session()->put('alert', ['type'=>'error','msg'=>'No matching user!']);
+            $request->session()->flash('alert', ['type'=>'error','msg'=>'No matching user!']);
             return redirect()->back();
         }
         //build token
@@ -109,12 +109,12 @@ class AuthController extends Controller
     public function getResetPassword(Request $request,$u,$t,$h){
         if(($t+86400) < time()) {
             // check 24 hour expiry
-            $request->session()->put('alert', ['type'=>'error','msg'=>'This reset code has expired!']);
+            $request->session()->flash('alert', ['type'=>'error','msg'=>'This reset code has expired!']);
             return redirect()->route('home');
         } else {
             $dataObj = User::find($u);
             if(!$dataObj) {
-                $request->session()->put('alert', ['type'=>'error','msg'=>'Invalid reset code!']);
+                $request->session()->flash('alert', ['type'=>'error','msg'=>'Invalid reset code!']);
                 return redirect()->route('home');
             }
             // check the hash & database token
@@ -127,7 +127,7 @@ class AuthController extends Controller
                     ]
                 );
             } else {
-                $request->session()->put('alert', ['type'=>'error','msg'=>'No matching user!']);
+                $request->session()->flash('alert', ['type'=>'error','msg'=>'No matching user!']);
                 return redirect()->route('home');
             }
         }
@@ -139,13 +139,13 @@ class AuthController extends Controller
             ->where('password_reset_token','=',$request->token)
             ->first();
         if(!$dataObj) {
-            $request->session()->put('alert', ['type'=>'error','msg'=>'Invalid reset code!']);
+            $request->session()->flash('alert', ['type'=>'error','msg'=>'Invalid reset code!']);
             return redirect()->route('home');
         }
         $dataObj->password = password_hash($request->Password,PASSWORD_BCRYPT);
         $dataObj->password_reset_token = NULL;
         $dataObj->save();
-        $request->session()->put('alert', ['type'=>'success','msg'=>'Password updated. Please log in.']);
+        $request->session()->flash('alert', ['type'=>'success','msg'=>'Password updated. Please log in.']);
         return redirect()->route('home');
     }
 
@@ -159,10 +159,10 @@ class AuthController extends Controller
             $dataObj->password_reset_token = NULL;
             $dataObj->save();
             $request->session()->flush();
-            $request->session()->put('alert', ['type'=>'success','msg'=>'Password updated. Please log in.']);
-            return redirect()->route('default');
+            $request->session()->flash('alert', ['type'=>'success','msg'=>'Password updated. Please log in.']);
+            return redirect()->route('login');
         } else {
-            $request->session()->put('alert', ['type'=>'error','msg'=>'No matching user!']);
+            $request->session()->flash('alert', ['type'=>'error','msg'=>'No matching user!']);
             return redirect()->route('home');
         }
     }

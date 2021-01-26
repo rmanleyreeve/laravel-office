@@ -69,7 +69,7 @@ class AdminController extends Controller
         }
         DB::commit();
         Utils::chlog("Amended employee attendance",$request->except('_token'));
-        $request->session()->put('alert', ['type'=>'success','msg'=>'The selected employee attendance has been updated in the system.']);
+        $request->session()->flash('alert', ['type'=>'success','msg'=>'The selected employee attendance has been updated in the system.']);
         return redirect()->to('/dashboard');
     }
 
@@ -138,7 +138,7 @@ class AdminController extends Controller
         $dataObj->record_type = 'MANUAL';
         $dataObj->save();
         Utils::chlog('Repaired employee attendance record',$dataObj->toArray());
-        $request->session()->put('alert', ['type'=>'success','msg'=>'The attendance record was repaired successfully.']);
+        $request->session()->flash('alert', ['type'=>'success','msg'=>'The attendance record was repaired successfully.']);
         return redirect()->to('/admin/check-attendance');
     }
 
@@ -164,7 +164,7 @@ class AdminController extends Controller
         $dataObj->record_type = 'MANUAL';
         $dataObj->save();
         Utils::chlog('Manually entered employee attendance record',$request->except('_token'));
-        $request->session()->put('alert', ['type'=>'success','msg'=>'Manual entry recorded successfully.']);
+        $request->session()->flash('alert', ['type'=>'success','msg'=>'Manual entry recorded successfully.']);
         return redirect()->route('home');
     }
 

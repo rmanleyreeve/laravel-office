@@ -75,7 +75,7 @@ class UserController extends Controller
             $img->save("{$dir}/user_{$id}.jpg", 90,'jpeg');
             Utils::chlog("Uploaded image for user {$id}",$file->toArray());
         }
-        $request->session()->put('alert', ['type'=>'success','msg'=>'The new user was added successfully.']);
+        $request->session()->flash('alert', ['type'=>'success','msg'=>'The new user was added successfully.']);
         return redirect()->to('/users');
     }
 
@@ -101,7 +101,7 @@ class UserController extends Controller
     public function getEditUser(Request $request, $id) {
         $user = User::where('deleted','=',false)->find($id);
         if(!$user) {
-            $request->session()->put('alert', ['type'=>'error','msg'=>'No matching user!']);
+            $request->session()->flash('alert', ['type'=>'error','msg'=>'No matching user!']);
             return redirect()->to('/users');
         } else {
             $user_permissions = DB::table('user_permissions')->select('id','permission_name')->get();
@@ -133,7 +133,7 @@ class UserController extends Controller
         //print_r($request->all()); exit;
         $dataObj = User::where('deleted','=',false)->find($id);
         if(!$dataObj) {
-            $request->session()->put('alert', ['type'=>'error','msg'=>'No matching user!']);
+            $request->session()->flash('alert', ['type'=>'error','msg'=>'No matching user!']);
             return redirect()->to('/users');
         } else {
             $prev = $dataObj->toArray();
@@ -170,7 +170,7 @@ class UserController extends Controller
                 $img->save("{$dir}/user_{$id}.jpg", 90,'jpeg');
                 Utils::chlog("Uploaded image for user {$id}",$file->toArray());
             }
-            $request->session()->put('alert', ['type'=>'success','msg'=>'The selected user has been updated in the system.']);
+            $request->session()->flash('alert', ['type'=>'success','msg'=>'The selected user has been updated in the system.']);
             return redirect()->to('/users');
         }
     }
@@ -178,11 +178,11 @@ class UserController extends Controller
     public function deleteUser(Request $request, $id){
         $dataObj = User::where('deleted','=',false)->find($id);
         if(!$dataObj) {
-            $request->session()->put('alert', ['type'=>'error','msg'=>'No matching user!']);
+            $request->session()->flash('alert', ['type'=>'error','msg'=>'No matching user!']);
         } else {
             $dataObj->deleted = true;
             $dataObj->save();
-            $request->session()->put('alert', ['type'=>'success','msg'=>'The selected user has been deleted from the system.']);
+            $request->session()->flash('alert', ['type'=>'success','msg'=>'The selected user has been deleted from the system.']);
         }
         return redirect()->to('/users');
     }
@@ -190,7 +190,7 @@ class UserController extends Controller
     public function getProfile(Request $request, $id){
         $user = User::where('deleted','=',false)->find($id);
         if(!$user) {
-            $request->session()->put('alert', ['type'=>'error','msg'=>'No matching user!']);
+            $request->session()->flash('alert', ['type'=>'error','msg'=>'No matching user!']);
             return redirect()->to('/users');
         } else {
             $pna = array_reduce($user->permission_names->toArray(),function($foo,$a){
@@ -237,7 +237,7 @@ class UserController extends Controller
             });
             $img->save("{$dir}/user_{$id}.jpg", 90,'jpeg');
             Utils::chlog("Uploaded image for user {$id}",$file->toArray());
-            $request->session()->put('alert', ['type'=>'success','msg'=>'The selected user profile image has been updated in the system.']);
+            $request->session()->flash('alert', ['type'=>'success','msg'=>'The selected user profile image has been updated in the system.']);
         }
         return redirect()->to("/users/{$id}/profile");
     }
@@ -247,7 +247,7 @@ class UserController extends Controller
             ->orderBy('surname')->orderBy('firstname')
             ->get();
         if(!$recordset) {
-            $request->session()->put('alert', ['type'=>'error','msg'=>'No records found!']);
+            $request->session()->flash('alert', ['type'=>'error','msg'=>'No records found!']);
             return redirect()->to('/users');
         } else {
             $fields=Schema::getColumnListing('users');
@@ -273,7 +273,7 @@ class UserController extends Controller
             ->toArray();
         //print_r($recordset); exit();
         if(!$recordset) {
-            $request->session()->put('alert', ['type'=>'error','msg'=>'No user activity found!']);
+            $request->session()->flash('alert', ['type'=>'warning','msg'=>'No user activity found!']);
             return redirect()->to('/users');
         }
         return view('global.master',[
@@ -297,7 +297,7 @@ class UserController extends Controller
             ->toArray();
         //print_r($recordset); exit();
         if(!$recordset) {
-            $request->session()->put('alert', ['type'=>'warning','msg'=>'No user activity found!']);
+            $request->session()->flash('alert', ['type'=>'warning','msg'=>'No user activity found!']);
         }
         return view('global.master',[
                 'content'=>'users/activity',
@@ -334,7 +334,7 @@ class UserController extends Controller
             ->toArray();
         //print_r($recordset); exit();
         if(!$recordset) {
-            $request->session()->put('alert', ['type'=>'error','msg'=>'No user activity found!']);
+            $request->session()->flash('alert', ['type'=>'warning','msg'=>'No user activity found!']);
             return redirect()->to('/users');
         } else {
             $fields = ['username','fullname','created_at','activity','url','data'];

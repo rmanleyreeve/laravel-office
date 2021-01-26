@@ -188,8 +188,8 @@ $(function () {
 		$('#attendance').children().remove();
 		$.each(json, function(k,r) {
 			var start=null, end=null, t1='',t2='', mins_pres=0, mins_break=0;
-			var tr = $('<tr><td></td></tr>');
-			tr.append('');
+			var tr = $('<tr></tr>');
+			tr.append('<td></td>');
 			tr.append('<td nowrap>'+r.name+' <a role="button" data-toggle="modal" data-target="#bsModal" href="/attendance/day/{{ date('Y-m-d') }}/'+r.uid+'/view"><i class="fa fa-clock-o" data-toggle="tooltip" data-placement="top" title="View Activity"></i></a></td>');
 			tr.append('<td>'+r.role+'</td>');
 			if(r.activity_log) {
@@ -275,9 +275,4 @@ $(function () {
 	});
 
 });
-</script>
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    // your code here
-}, false);
 </script>

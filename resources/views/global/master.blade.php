@@ -1,5 +1,4 @@
-@if(!isset($alert)) @php $alert = Session::get('alert'); @endphp @endif
-    <!doctype html>
+<!doctype html>
 <html lang="en">
 	<!--
 	RMR BackOffice System
@@ -71,12 +70,13 @@
                     }
                 });
 
-                @if($alert)
-                // notifications
-                $('#toast-container').remove();
-                toastr.options = {  {!! \App\Domain\AppFuncs::toastr_options() !!} };
-                toastr['{{ $alert['type'] }}']("{{ $alert['msg'] }}", "{{ strtoupper($alert['type']) }}");
-                {{ $alert = NULL }} {{ Session::forget('alert') }} @endif
+                @if(Session::has('alert'))
+                    // notifications
+                    @php $alert = Session::get('alert'); @endphp
+                    $('#toast-container').remove();
+                    toastr.options = {  {!! \App\Domain\AppFuncs::toastr_options() !!} };
+                    toastr['{{ $alert['type'] }}']("{{ $alert['msg'] }}", "{{ strtoupper($alert['type']) }}");
+                @endif
 
                 //set active menu from URL
                 var uri = '/{{ Request::path() }}';

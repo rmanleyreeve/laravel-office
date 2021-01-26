@@ -3,6 +3,9 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AjaxController;
 
+/*
+ * all routes use prefix 'ajax' defined in RouteServiceProvider
+ */
 
 Route::middleware('ajax:ATTENDANCE')->group(function () {
 
@@ -22,7 +25,7 @@ Route::middleware('ajax:ATTENDANCE')->group(function () {
 // JSON data (AJAX)
 Route::get('/data', [AjaxController::class,'getData'])->middleware('session');
 
-// check username AJAX
+// check username (AJAX)
 Route::post('/users/check-username', [AjaxController::class,'checkUsername'])->middleware('session:USER');
 
 // attendance error check (AJAX)

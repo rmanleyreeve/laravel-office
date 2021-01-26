@@ -1,4 +1,4 @@
-﻿@if(!isset($alert)) @php $alert = Session::get('alert'); @endphp @endif
+﻿<!doctype html>
 <html lang="en">
 	<head>
 		<meta charset="utf-8" />
@@ -47,12 +47,14 @@
 		<script>
 		$(function () {
 
-			@if($alert)
-			// notifications
-			$('#toast-container').remove();
+            @if(Session::has('alert'))
+            // notifications
+            @php $alert = Session::get('alert'); @endphp
+            $('#toast-container').remove();
             toastr.options = {  {!! \App\Domain\AppFuncs::toastr_options() !!} };
             toastr['{{ $alert['type'] }}']("{{ $alert['msg'] }}", "{{ strtoupper($alert['type']) }}");
-            {{ $alert = NULL }} {{ Session::forget('alert') }} @endif
+            @endif
+
 			//jQuery validation
 			$('#frmForgotPassword').validate({
 				highlight: function (element) {

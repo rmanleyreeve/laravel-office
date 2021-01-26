@@ -44,6 +44,7 @@ class RouteServiceProvider extends ServiceProvider
                 ->namespace($this->namespace)
                 ->group(base_path('routes/_api.php'));
 
+            // ajax requests
             Route::prefix('ajax')
                 ->middleware('web')
                 ->namespace($this->namespace)

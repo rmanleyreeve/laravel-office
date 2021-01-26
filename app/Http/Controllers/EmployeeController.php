@@ -49,7 +49,7 @@ class EmployeeController extends Controller
             $dataObj->image = file_get_contents($file->getPathname());
         }
         $dataObj->save();
-        $request->session()->put('alert', ['type'=>'success','msg'=>'The new employee was added successfully.']);
+        $request->session()->flash('alert', ['type'=>'success','msg'=>'The new employee was added successfully.']);
         return redirect()->to('/employees');
     }
 
@@ -70,7 +70,7 @@ class EmployeeController extends Controller
     public function getEditEmployee(Request $request, $id) {
         $employee = Employee::where('deleted','=',false)->find($id);
         if(!$employee) {
-            $request->session()->put('alert', ['type'=>'error','msg'=>'No matching employee!']);
+            $request->session()->flash('alert', ['type'=>'error','msg'=>'No matching employee!']);
             return redirect()->to('/employees');
         } else {
             return view('global.master',[
@@ -86,7 +86,7 @@ class EmployeeController extends Controller
         //print_r($request->all()); exit;
         $dataObj = Employee::where('deleted','=',false)->find($id);
         if(!$dataObj) {
-            $request->session()->put('alert', ['type'=>'error','msg'=>'No matching employee!']);
+            $request->session()->flash('alert', ['type'=>'error','msg'=>'No matching employee!']);
             return redirect()->to('/employees');
         } else {
             $prev = $dataObj->toArray();
@@ -102,7 +102,7 @@ class EmployeeController extends Controller
             }
             $dataObj->save();
             Utils::chlog("Edited employee {$id}",array('BEFORE'=>$prev,'AFTER'=>$dataObj->toArray(),'DIFF'=>array_diff_assoc($dataObj->toArray(),$prev)));
-            $request->session()->put('alert',['type'=>'success','msg'=>'The selected employee has been updated.']);
+            $request->session()->flash('alert',['type'=>'success','msg'=>'The selected employee has been updated.']);
             return redirect()->to('/employees');
         }
     }
@@ -110,11 +110,11 @@ class EmployeeController extends Controller
     public function deleteEmployee(Request $request, $id){
         $dataObj = Employee::where('deleted','=',false)->find($id);
         if(!$dataObj) {
-            $request->session()->put('alert', ['type'=>'error','msg'=>'No matching employee!']);
+            $request->session()->flash('alert', ['type'=>'error','msg'=>'No matching employee!']);
         } else {
             $dataObj->deleted = true;
             $dataObj->save();
-            $request->session()->put('alert', ['type'=>'success','msg'=>'The selected employee has been deleted from the system.']);
+            $request->session()->flash('alert', ['type'=>'success','msg'=>'The selected employee has been deleted from the system.']);
         }
         return redirect()->to('/employees');
     }
