@@ -39,7 +39,7 @@
 								</li>
 							</ul>
 
-                            @if(Session::get('user_id'))
+                            @if(Auth::check())
 							<ul class="nav navbar-nav navbar-right">
 
 								<!-- Call Search -->
@@ -96,20 +96,20 @@
 									<a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown">
 										@php
                                         $img_id = file_exists(
-                                            storage_path("app/public/media/user/user_".Session::get('user_id').".jpg")
-                                        ) ? Session::get('user_id') : 0;
+                                            storage_path("app/public/media/user/user_".Auth::id().".jpg")
+                                        ) ? Auth::id() : 0;
                                         @endphp
 										<img src="/storage/media/user/user_{{ $img_id }}.jpg?t={{ time() }}" alt="User Image" />
-										<span class="hidden-xs">{{ Session::get('user.fullname') }}</span>
+										<span class="hidden-xs">{{ Auth::user()->fullname }}</span>
 									</a>
 									<ul class="dropdown-menu">
 										<li class="header">
 											<img src="/storage/media/user/user_{{ $img_id }}.jpg?t={{ time() }}" alt="User Image" />
-											<div class="user">{{ Session::get('user.fullname') }}<div class="title">{{ \Illuminate\Support\Facades\Session::get('user.position') }}</div></div>
+											<div class="user">{{ Auth::user()->fullname }}<div class="title">{{ Auth::user()->position }}</div></div>
 										</li>
 										<li class="body">
 											<ul>
-												<li><a href="/users/{{ Session::get('user_id') }}/profile"><i class="material-icons">account_circle</i> Profile</a></li>
+												<li><a href="/users/{{ Auth::id() }}/profile"><i class="material-icons">account_circle</i> Profile</a></li>
 												<li><a href="/change-password"><i class="material-icons">lock_open</i> Change Password</a></li>
 												<li><a href="/logout" class="confirm-logoff"><i class="material-icons">exit_to_app</i> Log Out</a></li>
 											</ul>

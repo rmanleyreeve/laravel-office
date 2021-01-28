@@ -22,13 +22,6 @@ Route::middleware('session:USER')->group(function () {
     // delete
     Route::get ('/users/{id}/delete', [UserController::class, 'deleteUser']);
 
-    // profile
-    Route::get ('/users/{id}/profile', [UserController::class, 'getProfile']);
-
-    // image (modal)
-    Route::get ('/users/{id}/image', [UserController::class, 'getUserImage']);
-    Route::post ('/users/{id}/image', [UserController::class, 'postUserImage']);
-
     // export
     Route::get ('/users/{filename}.csv', [UserController::class, 'exportUsers']);
 
@@ -45,3 +38,11 @@ Route::middleware('session:USER')->group(function () {
     Route::get ('/users/activity/export/{filename}.csv', [UserController::class, 'exportActivity']);
 
 });
+
+// profile
+Route::get ('/users/{id}/profile', [UserController::class, 'getProfile'])->middleware('session:USER,SELF');
+
+// image (modal)
+Route::get ('/users/{id}/image', [UserController::class, 'getUserImage'])->middleware('session:USER,SELF');
+Route::post ('/users/{id}/image', [UserController::class, 'postUserImage'])->middleware('session:USER,SELF');
+

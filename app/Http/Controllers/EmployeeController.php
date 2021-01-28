@@ -5,12 +5,12 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use App\Models\Employee;
-use Illuminate\Support\Facades\Session;
 use App\Domain\AppUtils as Utils;
 use App\Domain\AppFuncs as Funcs;
 use Illuminate\Support\Arr;
 use Intervention\Image\ImageManagerStatic as Image;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\Auth;
 
 
 class EmployeeController extends Controller
@@ -135,7 +135,7 @@ class EmployeeController extends Controller
     }
 
     public function getEmployeeImage($id){
-        $auth = (Session::get('user_id') && Funcs::_up('EMPLOYEE'));
+        $auth = (Auth::check() && Funcs::_up('EMPLOYEE'));
         $dataObj = Employee::where('deleted','=',false)->find($id);
         if(!$auth || !$dataObj || !$dataObj->image) {
             $img = Image::make(public_path('/assets/images/silhouette.jpg'));

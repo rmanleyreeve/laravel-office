@@ -11,7 +11,6 @@ use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Schema;
 use Intervention\Image\ImageManagerStatic as Image;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Session;
 
 class UserController extends Controller
 {
@@ -236,7 +235,7 @@ class UserController extends Controller
                 $constraint->upsize();
             });
             $img->save("{$dir}/user_{$id}.jpg", 90,'jpeg');
-            Utils::chlog("Uploaded image for user {$id}",$file->toArray());
+            Utils::chlog("Uploaded image for user {$id}",$file);
             $request->session()->flash('alert', ['type'=>'success','msg'=>'The selected user profile image has been updated in the system.']);
         }
         return redirect()->to("/users/{$id}/profile");

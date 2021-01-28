@@ -3,8 +3,8 @@
 
 namespace App\Domain;
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Request;
 use App\Models\ChangeLog;
 
@@ -12,10 +12,10 @@ class AppUtils {
 
     // log changes to database
     public static function chlog($a, $obj = NULL) {
-        if (!Session::get('user_id')){ return; }
+        if (!Auth::check()){ return; }
         $d = ($obj) ? json_encode($obj,JSON_PRETTY_PRINT):NULL;
         ChangeLog::create([
-            'user_fk' => Session::get('user_id'),
+            'user_fk' => Auth::id(),
             'activity' => $a,
             'url' => Request::method() .' '.url()->full(),
             'data' => $d

@@ -5,7 +5,7 @@ namespace App\Http\Middleware;
 use App\Domain\AppFuncs as Funcs;
 use Closure;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Auth;
 
 class SessionAuth
 {
@@ -19,8 +19,7 @@ class SessionAuth
      */
     public function handle(Request $request, Closure $next, ...$permissions)
     {
-        //var_dump($permissions); exit();
-        if (!Session::get('user_id')) {
+        if (!Auth::check()) {
             return redirect()->route('login');
         } else {
             if(empty($permissions)) {
@@ -28,6 +27,9 @@ class SessionAuth
             } else if(Funcs::_up($permissions)) {
                 return $next($request);
             } else {
+                if(in_array('SELF',$permissions) && Auth::id() == $request->route('id')) {
+                    return $next($request);
+                }
                 abort(403);
             }
         }

@@ -5,7 +5,7 @@ namespace App\Http\Middleware;
 use App\Domain\AppFuncs as Funcs;
 use Closure;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Auth;
 
 class SessionAuthAjax
 {
@@ -20,7 +20,7 @@ class SessionAuthAjax
     public function handle(Request $request, Closure $next, ...$permissions)
     {
         //var_dump($permissions); exit();
-        if (Session::get('user_id') && Funcs::_up($permissions)) {
+        if (Auth::check() && Funcs::_up($permissions)) {
             return $next($request);
         } else {
             die('{}');

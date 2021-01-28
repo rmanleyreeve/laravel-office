@@ -6,7 +6,6 @@ use Illuminate\Routing\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\DB;
-use App\Domain\AppFuncs as Funcs;
 
 class AjaxController extends Controller
 {
@@ -79,7 +78,7 @@ class AjaxController extends Controller
     }
 
     public function countNotifications() {
-        $c=Session::get('notification_count') ?? '"0"';
+        $c = Session::get('notification_count') ?? '"0"';
         $content='{ "count":'.$c.' }';
         return response($content)
             ->header('Content-Type','application/json; charset=utf-8')

@@ -4,7 +4,7 @@
 					<ul class="metismenu" id="main-menu">
 
 						<li class="title">MAIN MENU</li>
-                        @if(Session::get('user_id'))
+                        @if(Auth::check())
 
 						<li>
 							<a href="/dashboard">

@@ -4,13 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\Absence;
 use App\Models\Employee;
-use App\Domain\AppFuncs as Funcs;
 use App\Domain\AppUtils as Utils;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
-use Illuminate\Support\Facades\Session;
 
 class AbsenceController extends Controller
 {

@@ -2,11 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\ActivityLog;
-use App\Models\Employee;
 use Illuminate\Routing\Controller;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\DB;
 use App\Domain\AppUtils as Utils;
 use App\Domain\AppFuncs as Funcs;
