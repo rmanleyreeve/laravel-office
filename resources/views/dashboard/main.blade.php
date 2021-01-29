@@ -27,7 +27,27 @@
 										<th>Breaks</th>
 									</tr>
 								</thead>
-								<tbody id="attendance"></tbody>
+                                <tbody id="v_attendance">
+                                    <tr v-for="r in vAttendance">
+                                        <td v-if="r.activity_log">
+                                            <piety :mins_pres=getDurations(r.activity_log).mins_pres :mins_break=getDurations(r.activity_log).mins_break :pie=getDurations(r.activity_log).pie></piety>
+                                        </td> <td v-else></td>
+                                        <td nowrap>
+                                            @{{ r.name }}
+                                            <a v-bind:href="'/attendance/day/2021-01-28/'+r.uid+'/view'" role="button" data-toggle="modal" data-target="#bsModal"><i class="fa fa-clock-o" data-toggle="tooltip" data-placement="top" title="View Activity"></i></a>
+                                        </td>
+                                        <td>@{{ r.role }}</td>
+                                        <td v-if="r.activity_log">
+                                            <span v-if="checkStatus(r.activity_log)"><i class="fa fa-circle m-r-5 col-success"></i>IN</span>
+                                            <span v-else><i class="fa fa-circle m-r-5 col-warning"></i>OUT</span>
+                                        </td>
+                                        <td v-else><i class="fa fa-circle m-r-5 col-danger"></i>OFF</td>
+                                        <td v-if="r.activity_log">@{{ getTimes(r.activity_log).t1 }}</td>
+                                        <td v-if="r.activity_log">@{{ getTimes(r.activity_log).t2 }}</td>
+                                        <td v-if="r.activity_log">@{{ getDurations(r.activity_log).hrs }}</td>
+                                        <td v-if="r.activity_log">@{{ getDurations(r.activity_log).breaks }}</td>
+                                    </tr>
+                                </tbody>
 							</table>
 						</div><!-- //table-responsive -->
 					</div><!-- //panel-body -->
@@ -64,6 +84,108 @@
 
 	</div>
 </section>
+
+<!-- Vue.JS -->
+<script src="https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.js"></script>
+
+<template id="piety_tpl">
+    <span class="pie">@{{ mins_pres }},@{{ mins_break }},@{{ pie }}</span>
+</template>
+
+<script>
+Vue.component('piety', {
+    template: '#piety_tpl',
+    props: ['mins_pres', 'mins_break', 'pie'],
+    mounted(){
+        $(this.$el).peity('pie',{ fill:['#16a085','#DA4453','#ccc'] });
+    }
+});
+
+new Vue({
+    el: '#v_attendance',
+    data: {
+        vAttendance: []
+    },
+    created: function(){
+        let self = this;
+        self.getData();
+        setInterval(function(){
+            self.getData();
+        },15000);
+    },
+    methods: {
+        getData: function(){
+            let self = this;
+            fetch('/assets/fake-attendance.php')
+            .then(function(response) {
+                return response.json()
+            }).then(function(responseJson) {
+                console.log(responseJson);
+                self.vAttendance = responseJson;
+            }).catch(function(ex) {
+                console.log('vue getData failed', ex);
+            });
+        },
+        checkStatus: function(alog) {
+            let start = alog[0];
+            let end = alog.slice(-1)[0];
+            if('ENTRY' == end['activity']) {
+                return true; //present
+            } else if('EXIT' == end['activity']) {
+                return false;
+            }
+        },
+        getTimes: function(alog){
+            let start = alog[0];
+            let end = alog.slice(-1)[0];
+            let t1 = (start && 'ENTRY' == start['activity']) ? start['time'] : '';
+            let t2 = (end && 'EXIT' == end['activity']) ? end['time'] : '';
+            return { "t1": t1, "t2": t2 };
+        },
+        getDurations: function(alog){
+            let mins_pres=0; let mins_break=0;
+            let start = alog[0]; let end = alog.slice(-1)[0];
+            var self = this;
+            $.each(alog,function(i,e){
+                if('EXIT' == e.activity) {
+                    let t_in = self.sqlToJsDate(alog[i-1].time_logged);
+                    let t_out = self.sqlToJsDate(e.time_logged);
+                    mins_pres += Math.ceil((t_out - t_in)/1000/60);
+                }
+                if('ENTRY' == e.activity) {
+                    if(alog[i-1]) { // previous exit
+                        let t_out = self.sqlToJsDate(alog[i-1].time_logged).getTime();
+                        let t_in = self.sqlToJsDate(e.time_logged).getTime();
+                        mins_break += Math.ceil((t_in - t_out)/1000/60);
+                    }
+                    if(e.time_logged == end['time_logged']) { // still present
+                        let t_in = self.sqlToJsDate(e.time_logged);
+                        let now = new Date();
+                        mins_pres += Math.ceil((now - t_in)/1000/60);
+                    }
+                }
+            });
+            let hrs = (mins_pres) ? Math.floor(mins_pres/60) +'h ' + (mins_pres % 60) + 'm' : '';
+            let breaks = (mins_break) ? Math.floor(mins_break/60) +'h ' + (mins_break % 60) + 'm' : '';
+            return { "mins_pres": mins_pres, "mins_break": mins_break, "hrs": hrs, "breaks": breaks, "pie": (480-mins_break-mins_pres) };
+        },
+        sqlToJsDate: function(sqlDate){
+            // sqlDate in SQL DATETIME format ("yyyy-mm-dd hh:mm:ss")
+            var sqlDateArr1 = sqlDate.split("-"); // sqlDateArr1[] = ['yyyy','mm','dd hh:mm']
+            var sYear = sqlDateArr1[0];
+            var sMonth = (Number(sqlDateArr1[1]) - 1).toString();
+            var sqlDateArr2 = sqlDateArr1[2].split(" "); // sqlDateArr2[] = ['dd', 'hh:mm:ss']
+            var sDay = sqlDateArr2[0];
+            var sqlDateArr3 = sqlDateArr2[1].split(":"); // sqlDateArr3[] = ['hh','mm','ss']
+            var sHour = sqlDateArr3[0];
+            var sMinute = sqlDateArr3[1];
+            var sSecond = sqlDateArr3[2];
+            return new Date(sYear,sMonth,sDay,sHour,sMinute,sSecond);
+        }
+    }
+
+});
+</script>
 
 <script src="/assets/plugins/moment/moment.js"></script>
 <script src="/assets/plugins/fullcalendar/dist/fullcalendar.min.js"></script>
@@ -149,95 +271,6 @@ $(function () {
 		$('body').append(a);
 		a.trigger('click').remove();
 	}
-
-	//populate attendance list
-	var attendance = {};
-
-	var checkAttendance = function(){
-		fetch('/ajax/dashboard-attendance')
-		.then(function(response) {
-			return response.json()
-		}).then(function(responseJson) {
-			//console.log(responseJson);
-			if(responseJson != attendance) {
-				attendance = responseJson;
-				updateAttendanceTable(responseJson);
-			}
-		}).catch(function(ex) {
-			console.log('checkAttendance failed', ex)
-		});
-	}
-
-	// ensure strict JS date format
-	var sqlToJsDate = function(sqlDate){
-		// sqlDate in SQL DATETIME format ("yyyy-mm-dd hh:mm:ss")
-		var sqlDateArr1 = sqlDate.split("-"); // sqlDateArr1[] = ['yyyy','mm','dd hh:mm']
-		var sYear = sqlDateArr1[0];
-		var sMonth = (Number(sqlDateArr1[1]) - 1).toString();
-		var sqlDateArr2 = sqlDateArr1[2].split(" "); // sqlDateArr2[] = ['dd', 'hh:mm:ss']
-		var sDay = sqlDateArr2[0];
-		var sqlDateArr3 = sqlDateArr2[1].split(":"); // sqlDateArr3[] = ['hh','mm','ss']
-		var sHour = sqlDateArr3[0];
-		var sMinute = sqlDateArr3[1];
-		var sSecond = sqlDateArr3[2];
-		return new Date(sYear,sMonth,sDay,sHour,sMinute,sSecond);
-	}
-
-	var updateAttendanceTable = function(json) {
-		//console.clear();
-		$('#attendance').children().remove();
-		$.each(json, function(k,r) {
-			var start=null, end=null, t1='',t2='', mins_pres=0, mins_break=0;
-			var tr = $('<tr></tr>');
-			tr.append('<td></td>');
-			tr.append('<td nowrap>'+r.name+' <a role="button" data-toggle="modal" data-target="#bsModal" href="/attendance/day/{{ date('Y-m-d') }}/'+r.uid+'/view"><i class="fa fa-clock-o" data-toggle="tooltip" data-placement="top" title="View Activity"></i></a></td>');
-			tr.append('<td>'+r.role+'</td>');
-			if(r.activity_log) {
-				start = r.activity_log[0];
-				end = r.activity_log.slice(-1)[0];
-				if('ENTRY' == end['activity']) { //present
-					tr.append('<td><i class="fa fa-circle m-r-5 col-success"></i>IN</td>');
-				} else if('EXIT' == end['activity']) { //absent
-					tr.append('<td><i class="fa fa-circle m-r-5 col-warning"></i>OUT</td>');
-				}
-			} else {
-				tr.append('<td><i class="fa fa-circle m-r-5 col-danger"></i>OFF</td>');
-			}
-			t1 = (start && 'ENTRY' == start['activity']) ? start['time']:'';
-			t2 = (end && 'EXIT' == end['activity']) ? end['time']:'';
-			tr.append('<td>'+t1+'</td><td>'+t2+'</td>');
-			$.each(r.activity_log,function(i,e){
-				if('EXIT' == e.activity) {
-					var t_in = sqlToJsDate(r.activity_log[i-1].time_logged);
-					var t_out = sqlToJsDate(e.time_logged);
-					mins_pres += Math.ceil((t_out - t_in)/1000/60);
-				}
-				if('ENTRY' == e.activity) {
-					if(r.activity_log[i-1]) { // previous exit
-						var t_out = sqlToJsDate(r.activity_log[i-1].time_logged).getTime();
-						var t_in = sqlToJsDate(e.time_logged).getTime();
-						mins_break += Math.ceil((t_in - t_out)/1000/60);
-					}
-					if(e.time_logged == end['time_logged']) { // still present
-						var t_in = sqlToJsDate(e.time_logged);
-						var now = new Date();
-						mins_pres += Math.ceil((now - t_in)/1000/60);
-					}
-				}
-			});
-			var hrs = (mins_pres) ? Math.floor(mins_pres/60) +'h ' + (mins_pres % 60) + 'm' : '';
-			tr.append('<td>'+hrs+'</td>');
-			var breaks = (mins_break) ? Math.floor(mins_break/60) +'h ' + (mins_break % 60) + 'm' : '';
-			tr.append('<td>'+breaks+'</td>');
-			tr.append( (r.activity_log) ? '<td><span class="pie">'+mins_pres+','+mins_break+','+(480-mins_break-mins_pres)+'</span></td>' : '<td></td>' );
-			$('#attendance').append(tr);
-			$('span.pie').peity('pie',{ fill:['#16a085','#DA4453','#ccc'] });
-			//console.log(r.name + " IN: "+mins_pres + " OUT: " + mins_break);
-		});
-	}
-	// check db every 15 secs
-	checkAttendance();
-	setInterval(checkAttendance, 15000);
 
 	// display time in header bar
     updateClock();
