@@ -13,7 +13,9 @@ Legacy functions rebuilt using Laravel classes
 ![image 1](resources/screenshots/screenshot2.png)
 ![image 1](resources/screenshots/screenshot3.png)
 
-## Installation
+## Installation  
+
+(Requires bower and npm)
 
 - Clone the repo and run the following:
     ```sh
