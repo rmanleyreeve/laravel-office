@@ -30,6 +30,7 @@ Legacy functions rebuilt using Laravel classes
     ```
 - Start the server:
     ```sh
+    $ php artisan storage:link
     $ php artisan serv
     ```
 The app should now be running on http://127.0.0.1:8000  
