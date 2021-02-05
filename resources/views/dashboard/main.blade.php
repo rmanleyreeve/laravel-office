@@ -62,7 +62,7 @@
 				<div class="panel panel-default" data-panel-close="false" data-panel-fullscreen="true" data-panel-collapsable="true">
 					<div class="panel-heading"><i class="fa fa-arrows m-r-5"></i> <span>ATTENDANCE SUMMARY: Past 7 Days</span></div>
 					<div class="panel-body">
-						<canvas id="bar_chart" height="300"></canvas>
+                        <div id="vue-chart"><bar-chart></bar-chart></div>
 					</div><!-- //panel-body -->
 				</div><!-- //panel -->
 			</div><!-- //col -->
@@ -86,7 +86,7 @@
 </section>
 
 <!-- Vue.JS -->
-<script src="https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.js"></script>
+<script src="/assets/plugins/vue/dist/vue.js"></script>
 
 <template id="piety_tpl">
     <span class="pie">@{{ mins_pres }},@{{ mins_break }},@{{ pie }}</span>
@@ -187,125 +187,128 @@ new Vue({
 });
 </script>
 
+<script src="/assets/plugins/peity/jquery.peity.js"></script>
 <script src="/assets/plugins/moment/moment.js"></script>
 <script src="/assets/plugins/fullcalendar/dist/fullcalendar.min.js"></script>
 <script src="/assets/plugins/fullcalendar/dist/locale/en-gb.js"></script>
 <script src="/assets/plugins/chartjs/dist/Chart.bundle.js"></script>
-<script src="assets/plugins/peity/jquery.peity.js"></script>
+<script src="/assets/js/vendor/vue-chartjs.min.js"></script>
 <script>
+    Vue.component('bar-chart', {
+        extends: VueChartJs.Bar,
+        mounted () {
+            this.renderChart(
+                {
+                    datasets: [
+                    @foreach($days as $i=>$d)
+                        @php
+                            $n = substr($d,0,3);
+                            $vals = array();
+                        @endphp
+                        @foreach($data as $dd)
+                            @php $vals[] = round($funcs->calcMinsPresent($dd[$d])/60,2); @endphp
+                        @endforeach
+                        { label:"{{ $d }}", backgroundColor:"{{ $barchart_colours[$n] }}", data: {{ json_encode($vals) }} },
+                    @endforeach
+                    ]
+                },
+                {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        xAxes: [{
+                            type: 'category',
+                            labels: {!! json_encode(array_keys($data)) !!},
+                            stacked: false,
+                            ticks: {stepSize:1,min:0,autoSkip:false},
+                        }],
+                        yAxes: [{
+                            stacked: false,
+                            beginAtZero: true,
+                            ticks: {stepSize:1,min:0,autoSkip:false},
+                            scaleLabel: {display:true,labelString:'HOURS'},
+                        }]
+                    },
+                    tooltips: {
+                        callbacks: {
+                            label: function(i, data) {
+                                let label = data.datasets[i.datasetIndex].label || '';
+                                if (label) {
+                                    label += ': ' + Math.floor(i.yLabel) +'h ' + Math.round((i.yLabel*60)%60) + 'm';
+                                }
+                                return label;
+                            }
+                        }
+                    },
+                    onClick: function (evt){
+                        let activeElement = this.getElementAtEvent(evt);
+                        let date = this.data.datasets[activeElement[0]._datasetIndex].label;
+                        let d = moment(date,'ddd D MMM YYYY').format('YYYY-MM-DD');
+                        console.log(d);
+                        let n = this.options.scales.xAxes[0].labels[activeElement[0]._index];
+                        let uid = employees[n];
+                        //console.log(d, uid);
+                        let a = $('<a role="button" data-toggle="modal" data-target="#bsModal" href="/attendance/day/'+d+'/'+uid+'/view"></a>');
+                        $('body').append(a);
+                        a.trigger('click').remove();
+                    }
+                }
+            )
+        }
+    })
 
-var employees = {!! htmlspecialchars_decode(json_encode($employees)) !!};
-var chart;
+    new Vue({
+        el: '#vue-chart',
+        data: {},
+    })
 
-$(function () {
-	"use strict"
+</script>
 
-	$('#draggable').sortable({
-		handle: '.panel .panel-heading'
-	});
-	$('#draggable').disableSelection();
+<script>
+    const employees = {!! htmlspecialchars_decode(json_encode($employees)) !!};
 
-	// bar chart
-	initBarChart();
-	function initBarChart() {
-		var config = {
-			type: 'bar',
-			legend: {display:false,reverse:true},
-			data: {
-				datasets: [
-@foreach($days as $i=>$d)
-    @php
-        $n = substr($d,0,3);
-        $vals = array();
-	@endphp
-	@foreach($data as $dd)
-		@php $vals[] = round($funcs->calcMinsPresent($dd[$d])/60,2); @endphp
-	@endforeach
-					{ label:"{{ $d }}", backgroundColor:"{{ $barchart_colours[$n] }}", data: {{ json_encode($vals) }} },
-@endforeach
-				]
-			},
-			options: {
-				responsive: true,
-				maintainAspectRatio: false,
-				scales: {
-					xAxes: [{
-						type: 'category',
-						labels: {!! json_encode(array_keys($data)) !!},
-						stacked: false,
-						ticks: {stepSize:1,min:0,autoSkip:false},
-					}],
-					yAxes: [{
-						stacked: false,
-						beginAtZero: true,
-						ticks: {stepSize:1,min:0,autoSkip:false},
-						scaleLabel: {display:true,labelString:'HOURS'},
-					}]
-				},
-        tooltips: {
-					callbacks: {
-						label: function(i, data) {
-							var label = data.datasets[i.datasetIndex].label || '';
-							if (label) {
-								label += ': ' + Math.floor(i.yLabel) +'h ' + Math.round((i.yLabel*60)%60) + 'm';
-							}
-							return label;
-						}
-					}
-        },
-				onClick: handleClick
-			}
-		}
-		chart = new Chart(document.getElementById("bar_chart").getContext("2d"), config);
-	}
+    $(function () {
+        "use strict"
 
-	function handleClick(evt){
-		var activeElement = chart.getElementAtEvent(evt);
-		var date = chart.config.data.datasets[activeElement[0]._datasetIndex].label;
-		var d = moment(date,'ddd D MMM YYYY').format('YYYY-MM-DD');
-		console.log(d);
-		var n = chart.config.options.scales.xAxes[0].labels[activeElement[0]._index];
-		var uid = employees[n];
-		//console.log(d, uid);
-		var a = $('<a role="button" data-toggle="modal" data-target="#bsModal" href="/attendance/day/'+d+'/'+uid+'/view"></a>');
-		$('body').append(a);
-		a.trigger('click').remove();
-	}
+        $('#draggable').sortable({
+            handle: '.panel .panel-heading'
+        });
+        $('#draggable').disableSelection();
 
-	// display time in header bar
-    updateClock();
-    setInterval('updateClock()', 3000);
-    $('#cal-date').html($.datepicker.formatDate('DD d MM yy', new Date()));
+        // display time in header bar
+        updateClock();
+        setInterval('updateClock()', 3000);
+        $('#cal-date').html($.datepicker.formatDate('DD d MM yy', new Date()));
 
-	// calendar
-	$('#calendar').fullCalendar({
-		events: {!! json_encode($events) !!},
-		defaultView: 'basic',
-		dayOfMonthFormat: 'ddd D MMM',
-		weekends: false,
-		visibleRange: {
-			start: moment('{{ date('Y-m-d') }}'),
-			end: moment('{{ date('Y-m-d', strtotime('+7 days')) }}'),
-		},
-		header: {
-			left: '',
-			center: 'title',
-			right: ''
-		},
-		eventClick: function(e) {
-			//$('<button type="button" data-toggle="modal" data-target="#bsModal" href="/absences/'+e.id+'/edit"></button>').appendTo('body').trigger('click');
-		},
-		eventRender: function(event, element) {
-			element.tooltip({
-				title: event.info,
-				container: 'body',
-				trigger : 'hover'
-			});
-		},
-		editable: false,
-		droppable: false,
-		contentHeight: "auto",
-	});
+        // calendar
+        $('#calendar').fullCalendar({
+            events: {!! json_encode($events) !!},
+            defaultView: 'basic',
+            dayOfMonthFormat: 'ddd D MMM',
+            weekends: false,
+            visibleRange: {
+                start: moment('{{ date('Y-m-d') }}'),
+                end: moment('{{ date('Y-m-d', strtotime('+7 days')) }}'),
+            },
+            header: {
+                left: '',
+                center: 'title',
+                right: ''
+            },
+            eventClick: function(e) {
+                //$('<button type="button" data-toggle="modal" data-target="#bsModal" href="/absences/'+e.id+'/edit"></button>').appendTo('body').trigger('click');
+            },
+            eventRender: function(event, element) {
+                element.tooltip({
+                    title: event.info,
+                    container: 'body',
+                    trigger : 'hover'
+                });
+            },
+            editable: false,
+            droppable: false,
+            contentHeight: "auto",
+        });
 
-});
+    });
 </script>

@@ -23,105 +23,108 @@ function next_week_url($ws){
 
 	<div class="page-body">
 
-		<div class="row clearfix">
-			<!-- Bar Chart -->
-			<div class="col-xs-12">
-				<div class="panel panel-default" data-panel-close="false" data-panel-fullscreen="true" data-panel-collapsable="true">
-					<div class="panel-heading"><span>Office Attendance: {{ date('D j M Y',$weekstart) }} - {{ date('D j M Y',$weekstop) }}</span></div>
-					<div class="panel-body">
-						<canvas id="bar_chart" height="130"></canvas>
-					</div>
-				</div>
-			</div>
-			<!-- #END# Bar Chart -->
-		</div>
+        <div class="row clearfix">
+            <!-- Bar Chart -->
+            <div class="col-xs-12">
+                <div class="panel panel-default" data-panel-close="false" data-panel-fullscreen="true" data-panel-collapsable="true">
+                    <div class="panel-heading"><span>Office Attendance: {{ date('D j M Y',$weekstart) }} - {{ date('D j M Y',$weekstop) }}</span></div>
+                    <div class="panel-body">
+                        <div id="vue-chart"><bar-chart></bar-chart></div>
+                    </div><!-- //panel-body -->
+                </div><!-- //panel -->
+            </div><!-- //col -->
+            <!-- #END# Bar Chart -->
+        </div><!-- //row -->
 
 	</div>
 </section>
 
 <script src="/assets/plugins/moment/moment.js"></script>
 <script src="/assets/plugins/chartjs/dist/Chart.bundle.js"></script>
+<!-- Vue.JS -->
+<script src="/assets/plugins/vue/dist/vue.js"></script>
+<script src="/assets/js/vendor/vue-chartjs.min.js"></script>
 <script>
+    Vue.component('bar-chart', {
+        extends: VueChartJs.Bar,
+        mounted () {
+            this.renderChart(
+                {
+                    datasets: [
+                    @foreach($days as $i=>$d)
+                        @php
+                            $n = substr($d,0,3);
+                            $vals = [];
+                        @endphp
+                        @foreach($data as $dd)
+                            @php $vals[] = round($funcs->calcMinsPresent($dd[$d])/60,2); @endphp
+                        @endforeach
+                        { label:"{{ $d }}", backgroundColor:"{{ $barchart_colours[$n] }}", data: {!! json_encode($vals) !!} },
+                    @endforeach
+                    ]
+                } ,
+                {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        xAxes: [{
+                            type: 'category',
+                            labels: {!! json_encode(array_keys($data)) !!},
+                            stacked: false,
+                            ticks: {stepSize:1,min:0,autoSkip:false},
+                        }],
+                        yAxes: [{
+                            stacked: false,
+                            beginAtZero: true,
+                            ticks: {stepSize:1,min:0,autoSkip:false},
+                            scaleLabel: {display:true,labelString:'HOURS'},
+                        }]
+                    },
+                    tooltips: {
+                        callbacks: {
+                            label: function(i, data) {
+                                let label = data.datasets[i.datasetIndex].label || '';
+                                if (label) {
+                                    label += ': ' + Math.floor(i.yLabel) +'h ' + Math.round((i.yLabel*60)%60) + 'm';
+                                }
+                                return label;
+                            }
+                        }
+                    },
+                    onClick: function (evt){
+                        let activeElement = this.getElementAtEvent(evt);
+                        let date = this.data.datasets[activeElement[0]._datasetIndex].label;
+                        let d = moment(date,'ddd D MMM YYYY').format('YYYY-MM-DD');
+                        console.log(d);
+                        let n = this.options.scales.xAxes[0].labels[activeElement[0]._index];
+                        let uid = employees[n];
+                        //console.log(d, uid);
+                        let a = $('<a role="button" data-toggle="modal" data-target="#bsModal" href="/attendance/day/'+d+'/'+uid+'/view"></a>');
+                        $('body').append(a);
+                        a.trigger('click').remove();
+                    }
+                }
+            )
+        }
+    })
 
-var employees = {!! json_encode($employees) !!};
-var chart;
+    new Vue({
+        el: '#vue-chart',
+        data: {},
+    })
+
+</script>
+
+<script>
+const employees = {!! json_encode($employees) !!};
 
 $(function () {
 	"use strict"
 
 	$('.fc-prev-button, .fc-next-button').on('click',function(){
-		var wk = $(this).data('week');
+		let wk = $(this).data('week');
 		window.location = '/attendance/week/' + wk;
 	});
-
-	// bar chart
-	initBarChart();
-	function initBarChart() {
-		var config = {
-			type: 'bar',
-			legend: {display:false,reverse:true},
-			data: {
-				datasets: [
-@foreach($days as $i=>$d)
-    @php
-        $n = substr($d,0,3);
-        $vals = [];
-	@endphp
-	@foreach($data as $dd)
-		@php $vals[] = round($funcs->calcMinsPresent($dd[$d])/60,2); @endphp
-	@endforeach
-					{ label:"{{ $d }}", backgroundColor:"{{ $barchart_colours[$n] }}", data: {!! json_encode($vals) !!} },
-@endforeach
-				]
-			},
-			options: {
-				responsive: true,
-				scales: {
-					xAxes: [{
-						type: 'category',
-						labels: {!! json_encode(array_keys($data)) !!},
-						stacked: false,
-						ticks: {stepSize:1,min:0,autoSkip:false},
-					}],
-					yAxes: [{
-						stacked: false,
-						beginAtZero: true,
-						ticks: {stepSize:1,min:0,autoSkip:false},
-						scaleLabel: {display:true,labelString:'HOURS'},
-					}]
-				},
-        tooltips: {
-					callbacks: {
-						label: function(i, data) {
-							var label = data.datasets[i.datasetIndex].label || '';
-							if (label) {
-								label += ': ' + Math.floor(i.yLabel) +'h ' + Math.round((i.yLabel*60)%60) + 'm';
-							}
-							return label;
-						}
-					}
-        },
-				onClick: handleClick
-			}
-		}
-		var canvas = document.getElementById("bar_chart");
-		if(window.innerWidth < 640) {
-			canvas.height = 400;
-		}
-		chart = new Chart(document.getElementById("bar_chart").getContext("2d"), config);
-	}
-
-	function handleClick(evt){
-		var activeElement = chart.getElementAtEvent(evt);
-		var date = chart.config.data.datasets[activeElement[0]._datasetIndex].label;
-		var d = moment(date+' {{ $year }}','ddd D MMM YYYY').format('YYYY-MM-DD');
-		var n = chart.config.options.scales.xAxes[0].labels[activeElement[0]._index];
-		var uid = employees[n];
-		//console.log(d, uid);
-		var a = $('<a role="button" data-toggle="modal" data-target="#bsModal" href="/attendance/day/'+d+'/'+uid+'/view"></a>');
-		$('body').append(a);
-		a.trigger('click').remove();
-	}
 
 });
 

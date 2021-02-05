@@ -125,14 +125,13 @@
 				</div><!-- //col -->
 			</div><!-- //row -->
 
-
 			<div class="row clearfix">
 				<!-- Line Chart -->
 				<div class="col-xs-12">
 					<div class="panel panel-default" data-panel-close="false" data-panel-fullscreen="true" data-panel-collapsable="true">
 						<div class="panel-heading"><span>Attendance Summary: &nbsp; {{ $employee_name }} ({{ date('j F Y',strtotime($start_date)) }} - {{ date('j F Y',strtotime($end_date)) }})</span></div>
 						<div class="panel-body">
-							<canvas id="line_chart" height="50"></canvas>
+                            <div id="vue-chart"><line-chart></line-chart></div>
 						</div>
 					</div>
 				</div>
@@ -149,52 +148,60 @@
 	</div><!-- //page-body -->
 </section><!-- //content -->
 
+
 <link href="/assets/plugins/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.css" rel="stylesheet" />
 <script src="/assets/plugins/moment/moment.js"></script>
 <script src="/assets/plugins/eonasdan-bootstrap-datetimepicker/src/js/bootstrap-datetimepicker.js"></script>
 <script src="/assets/plugins/chartjs/dist/Chart.bundle.js"></script>
+<!-- Vue.JS -->
+<script src="/assets/plugins/vue/dist/vue.js"></script>
+<script src="/assets/js/vendor/vue-chartjs.min.js"></script>
+@if($posted && $data)
+<script>
+    Vue.component('line-chart', {
+        extends: VueChartJs.Line,
+        mounted () {
+            this.renderChart(
+                {
+                    labels: {!! json_encode(array_keys($chart_data)) !!},
+                    datasets: [{
+                        label: "Hours Present",
+                        data: {!! json_encode(array_values($chart_data)) !!},
+                        pointBorderWidth: 1,
+                        lineTension: 0,
+                        fill: 'origin',
+                        borderWidth: 1,
+                        borderColor: 'rgba(200, 0, 0, 1)',
+                    }]
+                },
+                {
+                    legend: {
+                        display:false,
+                    },
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        yAxes: [{
+                            stacked: false,
+                            beginAtZero: true,
+                            ticks: {stepSize:1,min:0,autoSkip:false},
+                            scaleLabel: {display:true,labelString:'HOURS'},
+                        }]
+                    },
+                }
+            )
+        }
+    })
+    new Vue({
+        el: '#vue-chart',
+        data: {},
+    })
+</script>
+@endif
 
 <script>
-var chart;
 
 $(function(){
-
-	// line chart
-	@if($posted && $data)
-	initLineChart();
-	@endif
-	function initLineChart() {
-		var config = {
-			type: 'line',
-			data: {
-				labels: {!! json_encode(array_keys($chart_data)) !!},
-				datasets: [{
-					label: "Hours Present",
-					data: {!! json_encode(array_values($chart_data)) !!},
-					pointBorderWidth: 1,
-					lineTension: 0,
-					fill: 'origin',
-					borderWidth: 1,
-					borderColor: 'rgba(200, 0, 0, 1)',
-				}]
-			},
-			options: {
-				legend: {
-					display:false,
-				},
-				responsive: true,
-				scales: {
-					yAxes: [{
-						stacked: false,
-						beginAtZero: true,
-						ticks: {stepSize:1,min:0,autoSkip:false},
-						scaleLabel: {display:true,labelString:'HOURS'},
-					}]
-				},
-			}
-		}
-		chart = new Chart(document.getElementById("line_chart").getContext("2d"), config);
-	}
 
 	moment.updateLocale('en', {
 		week: { dow: 1 } // Monday is the first day of the week
@@ -220,8 +227,8 @@ $(function(){
 	});
 
 	// Exportable data table
-	var _title = 'Daily Attendance Breakdown';
-	var _message = '{{ ($employee_name ?? '') }} ({{ date('j F Y',strtotime($start_date ?? '')) }} - {{ date('j F Y',strtotime($end_date ?? '')) }})';
+	const _title = 'Daily Attendance Breakdown';
+	const _message = '{{ ($employee_name ?? '') }} ({{ date('j F Y',strtotime($start_date ?? '')) }} - {{ date('j F Y',strtotime($end_date ?? '')) }})';
 	$('.js-exportable').DataTable({
 		aaSorting: [],
 		searching: false,
