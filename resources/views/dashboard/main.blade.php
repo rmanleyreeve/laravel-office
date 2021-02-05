@@ -28,7 +28,7 @@
 									</tr>
 								</thead>
                                 <tbody id="v_attendance">
-                                    <tr v-for="r in vAttendance">
+                                    <tr v-for="r in vAttendance" :key="r.uid">
                                         <td v-if="r.activity_log">
                                             <piety :mins_pres=getDurations(r.activity_log).mins_pres :mins_break=getDurations(r.activity_log).mins_break :pie=getDurations(r.activity_log).pie></piety>
                                         </td> <td v-else></td>
@@ -116,7 +116,7 @@ new Vue({
     methods: {
         getData: function(){
             let self = this;
-            fetch('/assets/fake-attendance.php')
+            fetch('/ajax/dashboard-attendance')
             .then(function(response) {
                 return response.json()
             }).then(function(responseJson) {

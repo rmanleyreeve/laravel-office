@@ -12,3 +12,23 @@ Legacy functions rebuilt using Laravel classes
 ![image 1](resources/screenshots/screenshot1.png)
 ![image 1](resources/screenshots/screenshot2.png)
 ![image 1](resources/screenshots/screenshot3.png)
+
+## Installation
+
+- Clone the repo and run the following:
+    ```sh
+    $ composer update
+    $ npm install
+    $ npm run dev
+    ```
+- Set your DB connection details in `.env`
+- Create and populate the databse:
+    ```sh
+    $ php artisan migrate:fresh --seed
+    ```
+- Start the server:
+    ```sh
+    $ php artisan serv
+    ```
+The app should now be running on http://127.0.0.1:8000  
+Log in with username: "test" password: "test"
