@@ -10,5 +10,16 @@
     "/assets/images/re_main_logo.gif": "/assets/images/re_main_logo.gif",
     "/assets/images/sign-in.png": "/assets/images/sign-in.png",
     "/assets/images/sign-out.png": "/assets/images/sign-out.png",
-    "/assets/images/silhouette.jpg": "/assets/images/silhouette.jpg"
+    "/assets/images/silhouette.jpg": "/assets/images/silhouette.jpg",
+    "/assets/images/user_1.jpg": "/assets/images/user_1.jpg",
+    "/assets/js/vendor/vue-chartjs.min.js": "/assets/js/vendor/vue-chartjs.min.js",
+    "/assets/plugins/DataTables/extensions/export/buttons.bootstrap.min.js": "/assets/plugins/DataTables/extensions/export/buttons.bootstrap.min.js",
+    "/assets/plugins/DataTables/extensions/export/buttons.flash.min.js": "/assets/plugins/DataTables/extensions/export/buttons.flash.min.js",
+    "/assets/plugins/DataTables/extensions/export/buttons.html5.min.js": "/assets/plugins/DataTables/extensions/export/buttons.html5.min.js",
+    "/assets/plugins/DataTables/extensions/export/buttons.print.min.js": "/assets/plugins/DataTables/extensions/export/buttons.print.min.js",
+    "/assets/plugins/DataTables/extensions/export/dataTables.buttons.min.js": "/assets/plugins/DataTables/extensions/export/dataTables.buttons.min.js",
+    "/assets/plugins/DataTables/extensions/export/jszip.min.js": "/assets/plugins/DataTables/extensions/export/jszip.min.js",
+    "/assets/plugins/DataTables/extensions/export/pdfmake.min.js": "/assets/plugins/DataTables/extensions/export/pdfmake.min.js",
+    "/assets/plugins/DataTables/extensions/export/pdfmake.min.js.map": "/assets/plugins/DataTables/extensions/export/pdfmake.min.js.map",
+    "/assets/plugins/DataTables/extensions/export/vfs_fonts.js": "/assets/plugins/DataTables/extensions/export/vfs_fonts.js"
 }
