@@ -40,7 +40,7 @@ function next_week_url($ws){
 </section>
 
 <script src="/assets/plugins/moment/moment.js"></script>
-<script src="/assets/plugins/chartjs/dist/Chart.bundle.js"></script>
+<script src="/assets/plugins/chartjs/src/chart.js"></script>
 <!-- Vue.JS -->
 <script src="/assets/plugins/vue/dist/vue.js"></script>
 <script src="/assets/js/vendor/vue-chartjs.min.js"></script>

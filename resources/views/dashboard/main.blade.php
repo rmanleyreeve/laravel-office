@@ -191,7 +191,7 @@ new Vue({
 <script src="/assets/plugins/moment/moment.js"></script>
 <script src="/assets/plugins/fullcalendar/dist/fullcalendar.min.js"></script>
 <script src="/assets/plugins/fullcalendar/dist/locale/en-gb.js"></script>
-<script src="/assets/plugins/chartjs/dist/Chart.bundle.js"></script>
+<script src="/assets/plugins/chartjs/src/chart.js"></script>
 <script src="/assets/js/vendor/vue-chartjs.min.js"></script>
 <script>
     Vue.component('bar-chart', {

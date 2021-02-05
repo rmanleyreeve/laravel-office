@@ -33,7 +33,7 @@
 		<script src="/assets/plugins/jquery-ui/jquery-ui.js"></script>
 		<!-- Bootstrap Core Js -->
 		<script src="/assets/plugins/bootstrap/dist/js/bootstrap.min.js"></script>
-		<script src="/assets/plugins/bootbox.js/dist/bootbox.min.js"></script>
+		<script src="/assets/plugins/bootbox/dist/bootbox.min.js"></script>
 		<!-- iCheck Js -->
 		<script src="/assets/plugins/iCheck/icheck.js"></script>
 		<!-- Jquery Validation Js -->
