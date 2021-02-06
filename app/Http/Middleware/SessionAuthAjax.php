@@ -12,8 +12,8 @@ class SessionAuthAjax
     /**
      * Handle an incoming request, check session, if permissions check these
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Closure  $next
+     * @param \Illuminate\Http\Request $request
+     * @param \Closure $next
      * @param mixed $permissions
      * @return mixed
      */

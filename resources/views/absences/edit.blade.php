@@ -7,9 +7,9 @@
 		<div class="col-sm-6">
 			<label class="radio-inline" for="absence_type_holiday">
 				<input type="radio" name="absence_type" id="absence_type_holiday" value="HOLIDAY"@php $utils->radio('HOLIDAY',$selected->absence_type); @endphp> Holiday
-				</label>
+            </label>
 			<label class="radio-inline" for="absence_type_sickness">
-			<input type="radio" name="absence_type" id="absence_type_sickness" value="SICKNESS@php $utils->radio('SICKNESS',$selected->absence_type); @endphp> Sickness
+			    <input type="radio" name="absence_type" id="absence_type_sickness" value="SICKNESS"@php $utils->radio('SICKNESS',$selected->absence_type); @endphp> Sickness
 			</label>
 		</div>
 	</div>

@@ -2,24 +2,25 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Routing\Controller;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Session;
+use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Session;
 
 class AjaxController extends Controller
 {
-    public function getDashboardAttendance() {
-        $start=date('Y-m-d 00:00:00');
-        $end=date('Y-m-d 23:59:59');
-        $res=DB::table('employees AS e')
-            ->leftJoin('activity_log AS al',function($join) use ($start,$end) {
-                $join->on('al.employee_fk','e.uid')
-                    ->whereBetween('al.time_logged',[$start,$end]);
+    public function getDashboardAttendance()
+    {
+        $start = date('Y-m-d 00:00:00');
+        $end = date('Y-m-d 23:59:59');
+        $res = DB::table('employees AS e')
+            ->leftJoin('activity_log AS al', function ($join) use ($start, $end) {
+                $join->on('al.employee_fk', 'e.uid')
+                    ->whereBetween('al.time_logged', [$start, $end]);
             })
-            ->where('e.active','=',TRUE)
-            ->where('e.deleted','=',FALSE)
-            ->select('e.uid','e.firstname','e.surname','e.role','al.time_logged',
+            ->where('e.active', '=', TRUE)
+            ->where('e.deleted', '=', FALSE)
+            ->select('e.uid', 'e.firstname', 'e.surname', 'e.role', 'al.time_logged',
                 'al.activity')
             ->selectRaw('TIME(al.time_logged) AS time')
             ->orderBy('e.surname')
@@ -29,69 +30,72 @@ class AjaxController extends Controller
             ->toArray();
         //var_dump($res); exit;
         $recordset = [];
-        $c=0;
-        foreach($res as $r) {
+        foreach ($res as $r) {
             $recordset[$r->uid]['uid'] = $r->uid;
-            $recordset[$r->uid]['name'] = $r->firstname. ' '. $r->surname;
+            $recordset[$r->uid]['name'] = $r->firstname . ' ' . $r->surname;
             $recordset[$r->uid]['role'] = $r->role;
-            if($r->activity && $r->time_logged) {
-                $recordset[$r->uid]['activity_log'][] = array('activity'=>$r->activity,'time_logged'=>$r->time_logged,'time'=>$r->time);
+            if ($r->activity && $r->time_logged) {
+                $recordset[$r->uid]['activity_log'][] = array('activity' => $r->activity, 'time_logged' => $r->time_logged, 'time' => $r->time);
             }
         }
         //print_r($recordset); exit;
-        $content = json_encode(array_values($recordset),JSON_PRETTY_PRINT);
+        $content = json_encode(array_values($recordset), JSON_PRETTY_PRINT);
         return response($content)
             ->header('Content-Type', 'application/json; charset=utf-8')
             ->header('Access-Control-Allow-Origin', '*');
     }
 
-    public function getNotifications() {
-        $start=date('Y-m-d 00:00:00');
-        $end=date('Y-m-d 23:59:59');
-        $recordset=DB::table('activity_log AS al')
-            ->join('employees AS e','e.uid','=','al.employee_fk')
-            ->where('e.active','=',TRUE)
-            ->where('e.deleted','=',FALSE)
-            ->whereBetween('al.time_logged',[$start,$end])
+    public function getNotifications()
+    {
+        $start = date('Y-m-d 00:00:00');
+        $end = date('Y-m-d 23:59:59');
+        $recordset = DB::table('activity_log AS al')
+            ->join('employees AS e', 'e.uid', '=', 'al.employee_fk')
+            ->where('e.active', '=', TRUE)
+            ->where('e.deleted', '=', FALSE)
+            ->whereBetween('al.time_logged', [$start, $end])
             ->select(
-                'al.uid','al.time_logged','al.activity','al.notification_read',
-                'e.uid AS employee_id','e.firstname','e.surname','e.role'
+                'al.uid', 'al.time_logged', 'al.activity', 'al.notification_read',
+                'e.uid AS employee_id', 'e.firstname', 'e.surname', 'e.role'
             )
             ->selectRaw('TIME(al.time_logged) AS time')
-            ->orderBy('al.time_logged','DESC')
+            ->orderBy('al.time_logged', 'DESC')
             ->get()
             ->toArray();
-        Session::put('notification_count',count($recordset));
-        $content = json_encode(array_values($recordset),JSON_PRETTY_PRINT);
+        Session::put('notification_count', count($recordset));
+        $content = json_encode(array_values($recordset), JSON_PRETTY_PRINT);
         return response($content)
             ->header('Content-Type', 'application/json; charset=utf-8')
             ->header('Access-Control-Allow-Origin', '*');
     }
 
-    public function updateNotifications(Request $request) {
+    public function updateNotifications(Request $request)
+    {
         //print_r($request->all()); exit;
-        $uid = json_decode($request->get('uid'),true);
+        $uid = json_decode($request->get('uid'), true);
         DB::table('activity_log')
-            ->whereIn('uid',$uid)
+            ->whereIn('uid', $uid)
             ->update(['notification_read' => true]);
         return response('OK');
     }
 
-    public function countNotifications() {
+    public function countNotifications()
+    {
         $c = Session::get('notification_count') ?? '"0"';
-        $content='{ "count":'.$c.' }';
+        $content = '{ "count":' . $c . ' }';
         return response($content)
-            ->header('Content-Type','application/json; charset=utf-8')
-            ->header('Access-Control-Allow-Origin','*');
+            ->header('Content-Type', 'application/json; charset=utf-8')
+            ->header('Access-Control-Allow-Origin', '*');
     }
 
-    public function getAlerts() {
-        $res=DB::table('activity_log AS al')
-            ->join('employees AS e','e.uid','=','al.employee_fk')
-            ->where('e.active','=',TRUE)
-            ->where('e.deleted','=',FALSE)
-            ->where('al.time_logged','<',date('Y-m-d'))
-            ->select('al.time_logged','al.activity','e.uid','e.firstname','e.surname')
+    public function getAlerts()
+    {
+        $res = DB::table('activity_log AS al')
+            ->join('employees AS e', 'e.uid', '=', 'al.employee_fk')
+            ->where('e.active', '=', TRUE)
+            ->where('e.deleted', '=', FALSE)
+            ->where('al.time_logged', '<', date('Y-m-d'))
+            ->select('al.time_logged', 'al.activity', 'e.uid', 'e.firstname', 'e.surname')
             ->selectRaw('DATE(al.time_logged) AS day,TIME(al.time_logged) AS clock_time')
             ->orderBy('al.time_logged')
             ->orderBy('e.surname')
@@ -99,39 +103,41 @@ class AjaxController extends Controller
             ->get()
             ->toArray();
         $data = [];
-        foreach($res as $r) {
+        foreach ($res as $r) {
             $n = $r->firstname . ' ' . $r->surname;
-            $data[$n][$r->day]['activity'][] = ['time'=>$r->clock_time,'activity'=>$r->activity];
+            $data[$n][$r->day]['activity'][] = ['time' => $r->clock_time, 'activity' => $r->activity];
         }
         //print_r($data);
-        $errors = []; $c = 1;
-        foreach($data as $name=>$days) {
-            foreach($days as $day=>$activity) {
+        $errors = [];
+        $c = 1;
+        foreach ($data as $name => $days) {
+            foreach ($days as $day => $activity) {
                 $vals = array_values($activity);
-                $arr = reset($vals );
-                if(count($arr) % 2 != 0) {
-                    $errors[$c] = array('name'=>$name,'date'=>$day,'activity'=>$arr);
+                $arr = reset($vals);
+                if (count($arr) % 2 != 0) {
+                    $errors[$c] = array('name' => $name, 'date' => $day, 'activity' => $arr);
                     $c++;
                 }
             }
         }
         //print_r($errors); exit;
-        $content = json_encode(array_values($errors),JSON_PRETTY_PRINT);
+        $content = json_encode(array_values($errors), JSON_PRETTY_PRINT);
         return response($content)
             ->header('Content-Type', 'application/json; charset=utf-8')
             ->header('Access-Control-Allow-Origin', '*');
     }
 
-    public function getData() {
-        $start=date('Y-m-d 00:00:00');
-        $end=date('Y-m-d 23:59:59');
-        $res=DB::table('employees AS e')
-            ->leftJoin('activity_log AS al',function($join) use ($start,$end) {
-                $join->on('al.employee_fk','e.uid')
-                    ->whereBetween('al.time_logged',[$start,$end]);
+    public function getData()
+    {
+        $start = date('Y-m-d 00:00:00');
+        $end = date('Y-m-d 23:59:59');
+        $res = DB::table('employees AS e')
+            ->leftJoin('activity_log AS al', function ($join) use ($start, $end) {
+                $join->on('al.employee_fk', 'e.uid')
+                    ->whereBetween('al.time_logged', [$start, $end]);
             })
-            ->where('e.active','=',TRUE)
-            ->select('e.uid','e.firstname','e.surname','e.role','al.time_logged',
+            ->where('e.active', '=', TRUE)
+            ->select('e.uid', 'e.firstname', 'e.surname', 'e.role', 'al.time_logged',
                 'al.activity')
             ->orderBy('e.surname')
             ->orderBy('e.firstname')
@@ -139,34 +145,36 @@ class AjaxController extends Controller
             ->get()
             ->toArray();
         $recordset = [];
-        foreach($res as $r) {
-            $recordset[$r->uid]['name'] = $r->firstname. ' '. $r->surname;
+        foreach ($res as $r) {
+            $recordset[$r->uid]['name'] = $r->firstname . ' ' . $r->surname;
             $recordset[$r->uid]['role'] = $r->role;
-            if($r->activity && $r->time_logged) {
-                $recordset[$r->uid]['activity_log'][] = array('activity'=>$r->activity,'time_logged'=>$r->time_logged);
+            if ($r->activity && $r->time_logged) {
+                $recordset[$r->uid]['activity_log'][] = array('activity' => $r->activity, 'time_logged' => $r->time_logged);
             }
         }
-        $content = json_encode(array_values($recordset),JSON_PRETTY_PRINT);
+        $content = json_encode(array_values($recordset), JSON_PRETTY_PRINT);
         return response($content)
             ->header('Content-Type', 'application/json; charset=utf-8')
             ->header('Access-Control-Allow-Origin', '*');
     }
 
-    public function checkUsername(Request $request) {
+    public function checkUsername(Request $request)
+    {
         $res = DB::table('users')
-            ->where('username','=',$request->get('username'))
+            ->where('username', '=', $request->get('username'))
             ->first();
-        $content = ($res) ? '"This username is already taken! Try another."':'"true"';
+        $content = ($res) ? '"This username is already taken! Try another."' : '"true"';
         return response($content);
     }
 
-    public function checkAttendance() {
-        $res=DB::table('activity_log AS al')
-            ->join('employees AS e','e.uid','=','al.employee_fk')
-            ->where('al.time_logged','<',date('Y-m-d'))
-            ->where('e.active','=',TRUE)
-            ->where('e.deleted','=',FALSE)
-            ->select('al.time_logged','al.activity','e.uid','e.firstname','e.surname')
+    public function checkAttendance()
+    {
+        $res = DB::table('activity_log AS al')
+            ->join('employees AS e', 'e.uid', '=', 'al.employee_fk')
+            ->where('al.time_logged', '<', date('Y-m-d'))
+            ->where('e.active', '=', TRUE)
+            ->where('e.deleted', '=', FALSE)
+            ->select('al.time_logged', 'al.activity', 'e.uid', 'e.firstname', 'e.surname')
             ->selectRaw('DATE(al.time_logged) AS day,TIME(al.time_logged) AS clock_time')
             ->orderBy('al.time_logged')
             ->orderBy('e.surname')
@@ -174,23 +182,23 @@ class AjaxController extends Controller
             ->get()
             ->toArray();
         $data = [];
-        foreach($res as $r) {
+        foreach ($res as $r) {
             $n = $r->firstname . ' ' . $r->surname;
-            $data[$n][$r->day]['activity'][] = array('employee_fk'=>$r->employee_fk,'time'=>$r->clock_time,'activity'=>$r->activity);
+            $data[$n][$r->day]['activity'][] = array('employee_fk' => $r->employee_fk, 'time' => $r->clock_time, 'activity' => $r->activity);
         }
         //print_r($data);
         $errors = [];
-        foreach($data as $name=>$days) {
-            foreach($days as $day=>$activity) {
+        foreach ($data as $name => $days) {
+            foreach ($days as $day => $activity) {
                 $array = array_values($activity);
-                $arr = reset($array );
-                if(count($arr) % 2 != 0) {
+                $arr = reset($array);
+                if (count($arr) % 2 != 0) {
                     $errors[$name][$day] = $arr;
                 }
             }
         }
         //print_r($errors); exit;
-        $content = json_encode(array_values($errors),JSON_PRETTY_PRINT);
+        $content = json_encode(array_values($errors), JSON_PRETTY_PRINT);
         return response($content)
             ->header('Content-Type', 'application/json; charset=utf-8')
             ->header('Access-Control-Allow-Origin', '*');

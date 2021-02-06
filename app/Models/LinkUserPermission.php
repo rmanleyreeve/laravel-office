@@ -15,11 +15,13 @@ class LinkUserPermission extends Model
         'created_at'
     ];
 
-    public function user() {
+    public function user()
+    {
         return $this->belongsTo(User::class, 'user_fk', 'user_id');
     }
 
-    public function permission() {
+    public function permission()
+    {
         return $this->belongsTo(UserPermission::class, 'permission_fk', 'id');
     }
 

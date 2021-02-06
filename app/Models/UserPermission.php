@@ -20,5 +20,4 @@ class UserPermission extends Model
         return $this->hasMany(LinkUserPermission::class, 'permission_fk');
     }
 
-
 }

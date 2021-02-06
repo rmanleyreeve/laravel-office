@@ -9,8 +9,8 @@ class ChangeLog extends Model
 {
     use HasFactory;
 
-    protected $table='change_log';
-    protected $primaryKey='uid';
+    protected $table = 'change_log';
+    protected $primaryKey = 'uid';
     protected $guarded = [
         'created_at'
     ];

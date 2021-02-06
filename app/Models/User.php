@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable
@@ -23,6 +22,21 @@ class User extends Authenticatable
         'active',
         'user_notes',
     ];
+
+    public function scopeNotDeleted($query)
+    {
+        $query->where('deleted', false);
+    }
+
+    public function scopeIsActive($query)
+    {
+        $query->where('active', true);
+    }
+
+    public function scopeBySurname($query)
+    {
+        $query->orderBy('surname')->orderBy('firstname');
+    }
 
     /**
      * The attributes that should be hidden for arrays.
@@ -55,10 +69,11 @@ class User extends Authenticatable
         return $this->hasMany(LinkUserPermission::class, 'user_fk')
             ->select('permission_fk');
     }
+
     public function permission_names()
     {
         return $this->hasMany(LinkUserPermission::class, 'user_fk')
-            ->join('user_permissions AS up','up.id','=','permission_fk')
+            ->join('user_permissions AS up', 'up.id', '=', 'permission_fk')
             ->select('up.permission_name');
     }
 

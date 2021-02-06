@@ -14,15 +14,22 @@ class Absence extends Model
         'created_at'
     ];
 
+    public function scopeNotDeleted($query)
+    {
+        $query->where('deleted', false);
+    }
+
+
     public function employee()
     {
         return $this->belongsTo(Employee::class, 'employee_fk', 'uid');
     }
 
-    public function employee_name() {
+    public function employee_name()
+    {
         return $this->belongsTo(Employee::class, 'employee_fk', 'uid')
-            ->where('deleted','=',false)
-            ->select(['uid','initials'])
+            ->where('deleted', '=', false)
+            ->select(['uid', 'initials'])
             ->selectRaw("CONCAT(firstname,' ',surname) AS name");
     }
 

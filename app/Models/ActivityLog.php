@@ -9,8 +9,8 @@ class ActivityLog extends Model
 {
     use HasFactory;
 
-    protected $table='activity_log';
-    protected $primaryKey='uid';
+    protected $table = 'activity_log';
+    protected $primaryKey = 'uid';
     protected $guarded = [
         'created_at'
     ];

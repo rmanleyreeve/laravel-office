@@ -14,6 +14,21 @@ class Employee extends Model
         'created_at'
     ];
 
+    public function scopeNotDeleted($query)
+    {
+        $query->where('deleted', false);
+    }
+
+    public function scopeIsActive($query)
+    {
+        $query->where('active', true);
+    }
+
+    public function scopeBySurname($query)
+    {
+        $query->orderBy('surname')->orderBy('firstname');
+    }
+
     public function absences()
     {
         return $this->hasMany(Absence::class, 'employee_fk');
