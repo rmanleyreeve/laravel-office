@@ -50,18 +50,7 @@ class AttendanceController extends Controller
             $days[$i] = date('D j M', strtotime($start . " +$i days"));
         }
         $days = array_unique($days);
-        $data = [];
-        foreach ($res as $r) {
-            $n = $r->firstname . ' ' . $r->surname;
-            $data[$n] = array_combine(array_values($days), array_fill(0, count($days), NULL));
-        }
-        foreach ($res as $r) {
-            if ($r->day) {
-                $n = $r->firstname . ' ' . $r->surname;
-                $data[$n][date('D j M', strtotime($r->day))][] =
-                    array('time_logged' => $r->time_logged, 'activity' => $r->activity);
-            }
-        }
+        $data = $this->buildData($res, $days);
         //pp($data); exit;
         // employees
         $res = DB::table('employees')
@@ -102,18 +91,7 @@ class AttendanceController extends Controller
             $days[$i] = date('D j M', $i);
         }
         $days = array_unique($days);
-        $data = [];
-        foreach ($res as $r) {
-            $n = $r->firstname . ' ' . $r->surname;
-            $data[$n] = array_combine(array_values($days), array_fill(0, count($days), NULL));
-        }
-        foreach ($res as $r) {
-            if ($r->day) {
-                $n = $r->firstname . ' ' . $r->surname;
-                $data[$n][date('D j M', strtotime($r->day))][] =
-                    array('time_logged' => $r->time_logged, 'activity' => $r->activity);
-            }
-        }
+        $data = $this->buildData($res, $days);
         $totals = [];
         foreach (array_keys($data) as $k) {
             $totals[$k]['total_present'] = NULL;
@@ -190,6 +168,23 @@ class AttendanceController extends Controller
             ->orderBy('al.time_logged')
             ->get()
             ->toArray();
+    }
+
+    protected function buildData($res, $days): array
+    {
+        $data = [];
+        foreach ($res as $r) {
+            $n = $r->firstname . ' ' . $r->surname;
+            $data[$n] = array_combine(array_values($days), array_fill(0, count($days), NULL));
+        }
+        foreach ($res as $r) {
+            if ($r->day) {
+                $n = $r->firstname . ' ' . $r->surname;
+                $data[$n][date('D j M', strtotime($r->day))][] =
+                    array('time_logged' => $r->time_logged, 'activity' => $r->activity);
+            }
+        }
+        return $data;
     }
 
 }

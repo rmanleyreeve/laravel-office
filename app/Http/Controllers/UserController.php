@@ -18,7 +18,7 @@ class UserController extends Controller
     {
         $recordset = User::notDeleted()
             ->select('*')
-            ->selectRaw("(SELECT GROUP_CONCAT(permission_name ORDER BY permission_name SEPARATOR ', ') FROM user_permissions WHERE id IN (SELECT permission_fk FROM link_user_permission WHERE user_fk=users.user_id)) AS permissions")
+            ->selectRaw("(SELECT GROUP_CONCAT(permission_name ORDER BY permission_name SEPARATOR ', ') FROM user_permissions WHERE id IN (SELECT permission_fk FROM link_user_permission WHERE user_fk=users.user_id)) AS permission_list")
             ->selectRaw('(SELECT COUNT(*) FROM change_log WHERE user_fk=users.user_id) AS activity_count')
             ->orderBy('user_id', 'DESC')
             ->get();
@@ -65,25 +65,7 @@ class UserController extends Controller
         }
         DB::commit();
         Utils::chlog('Added user', $dataObj->toArray());
-        $dir = storage_path("app/public/media/user");
-        if ($request->hasfile('user_image')) {
-            $request->validate([
-                'user_image.*' => 'mimes:png,gif,jpg,jpeg'
-            ]);
-            $file = $request->file('user_image');
-            //var_dump($file); exit;
-            if (!file_exists($dir)) {
-                mkdir($dir, 0777, true);
-            }
-            $pi = pathinfo($file->getClientOriginalName());
-            $img = Image::make($file->getRealPath());
-            $img->resize(300, 300, function ($constraint) {
-                $constraint->aspectRatio();
-                $constraint->upsize();
-            });
-            $img->save("{$dir}/user_{$id}.jpg", 90, 'jpeg');
-            Utils::chlog("Uploaded image for user {$id}", $file->toArray());
-        }
+        $this->handleImage($request, $id);
         $request->session()->flash('alert', ['type' => 'success', 'msg' => 'The new user was added successfully.']);
         return redirect()->to('/users');
     }
@@ -165,26 +147,8 @@ class UserController extends Controller
                 ]);
             }
             DB::commit();
-            Utils::chlog('Added user', $dataObj->toArray());
-            $dir = storage_path("app/public/media/user");
-            if ($request->hasfile('user_image')) {
-                $request->validate([
-                    'user_image.*' => 'mimes:png,gif,jpg,jpeg'
-                ]);
-                $file = $request->file('user_image');
-                //var_dump($file); exit;
-                if (!file_exists($dir)) {
-                    mkdir($dir, 0777, true);
-                }
-                $pi = pathinfo($file->getClientOriginalName());
-                $img = Image::make($file->getRealPath());
-                $img->resize(300, 300, function ($constraint) {
-                    $constraint->aspectRatio();
-                    $constraint->upsize();
-                });
-                $img->save("{$dir}/user_{$id}.jpg", 90, 'jpeg');
-                Utils::chlog("Uploaded image for user {$id}", $file->toArray());
-            }
+            Utils::chlog("Updated user {$id}", array('BEFORE' => $prev, 'AFTER' => $dataObj->toArray(), 'DIFF' => array_diff_assoc($dataObj->toArray(), $prev)));
+            $this->handleImage($request, $id);
             $request->session()->flash('alert', ['type' => 'success', 'msg' => 'The selected user has been updated in the system.']);
             return redirect()->to('/users');
         }
@@ -241,24 +205,7 @@ class UserController extends Controller
 
     public function postUserImage(Request $request, $id)
     {
-        $dir = storage_path("app/public/media/user");
-        if ($request->hasfile('user_image')) {
-            $request->validate([
-                'user_image.*' => 'mimes:png,gif,jpg,jpeg'
-            ]);
-            $file = $request->file('user_image');
-            //var_dump($file); exit;
-            if (!file_exists($dir)) {
-                mkdir($dir, 0777, true);
-            }
-            $pi = pathinfo($file->getClientOriginalName());
-            $img = Image::make($file->getRealPath());
-            $img->resize(300, 300, function ($constraint) {
-                $constraint->aspectRatio();
-                $constraint->upsize();
-            });
-            $img->save("{$dir}/user_{$id}.jpg", 90, 'jpeg');
-            Utils::chlog("Uploaded image for user {$id}", $file);
+        if ($this->handleImage($request, $id)) {
             $request->session()->flash('alert', ['type' => 'success', 'msg' => 'The selected user profile image has been updated in the system.']);
         }
         return redirect()->to("/users/{$id}/profile");
@@ -373,6 +320,30 @@ class UserController extends Controller
                 ->header('Content-Type', 'text/csv');
         }
 
+    }
+
+    protected function handleImage($request, $id): bool
+    {
+        $dir = storage_path("app/public/media/user");
+        if ($request->hasfile('user_image')) {
+            $request->validate([
+                'user_image.*' => 'mimes:png,gif,jpg,jpeg'
+            ]);
+            $file = $request->file('user_image');
+            //var_dump($file); exit;
+            if (!file_exists($dir)) {
+                mkdir($dir, 0777, true);
+            }
+            $img = Image::make($file->getRealPath());
+            $img->resize(300, 300, function ($constraint) {
+                $constraint->aspectRatio();
+                $constraint->upsize();
+            });
+            $img->save("{$dir}/user_{$id}.jpg", 90, 'jpeg');
+            Utils::chlog("Uploaded image for user {$id}", $file);
+            return true;
+        }
+        return false;
     }
 
 }

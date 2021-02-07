@@ -15,7 +15,7 @@ class AppFuncs
     // APP-SPECIFIC FUNCTIONS ===================================
 
     // toastr.js alert options
-    public static function toastr_options()
+    public static function toastr_options(): string
     {
         return '
         "closeButton": false,
@@ -36,7 +36,7 @@ class AppFuncs
         ';
     }
 
-    public static function _up($c)
+    public static function _up($c): bool
     {
         if (!Auth::check()) {
             return false;
@@ -66,7 +66,7 @@ class AppFuncs
     }
 
     // calculate minutes present per day
-    public function calcMinsPresent($day_activity_log)
+    public function calcMinsPresent($day_activity_log): int
     {
         $mins_pres = 0;
         if ($day_activity_log && 'ENTRY' == reset($day_activity_log)['activity'] && 'EXIT' == end($day_activity_log)['activity']) {
@@ -82,7 +82,7 @@ class AppFuncs
     }
 
     // calculate minutes break per day
-    public function calcMinsBreak($day_activity_log)
+    public function calcMinsBreak($day_activity_log): int
     {
         $mins_break = 0;
         if ($day_activity_log && 'ENTRY' == reset($day_activity_log)['activity'] && 'EXIT' == end($day_activity_log)['activity']) {

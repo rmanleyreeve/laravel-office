@@ -61,12 +61,12 @@ class AppUtils
     }
 
     // XLS compatible string
-    public function xlsVal($v, $find = [], $replace = [])
+    public function xlsVal($v, $find = [], $replace = []): string
     {
         $val = ($this->isUTF8($v)) ? $v : utf8_encode(stripslashes($v));
         // quotes and tab char forces values to be displayed as text in MS Excel
         $str = '"' . str_replace($find, $replace, $val) . "\"\t";
-        return $val;
+        return $str;
     }
 
     // convert filename to human readable form
@@ -421,7 +421,6 @@ class AppUtils
     // builds array from DB ENUM values, ensuring non-zero indexing
     public static function enumSelect($tbl, $col)
     {
-        $instance = new static; // create an instance of the model to be able to get the table name
         $type = DB::select(DB::raw("SHOW COLUMNS FROM {$tbl} WHERE Field = '{$col}';"))[0]->Type;
         preg_match('/^enum\((.*)\)$/', $type, $matches);
         $enum = array();

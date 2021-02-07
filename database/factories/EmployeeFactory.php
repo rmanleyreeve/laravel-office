@@ -3,8 +3,8 @@
 namespace Database\Factories;
 
 use App\Models\Employee;
-use Illuminate\Database\Eloquent\Factories\Factory;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 
 class EmployeeFactory extends Factory
@@ -21,7 +21,7 @@ class EmployeeFactory extends Factory
      *
      * @return array
      */
-    public function definition() : array
+    public function definition(): array
     {
         $firstname = $this->faker->firstName;
         $surname = $this->faker->lastName;
@@ -29,7 +29,7 @@ class EmployeeFactory extends Factory
             'firstname' => $firstname,
             'surname' => $surname,
             'role' => $this->faker->jobTitle,
-            'initials' => substr($firstname,0,1) . substr($surname,0,1),
+            'initials' => substr($firstname, 0, 1) . substr($surname, 0, 1),
             'email' => $this->faker->unique()->safeEmail,
             'notes' => $this->faker->realText(),
             'image' => file_get_contents($this->faker->image()),

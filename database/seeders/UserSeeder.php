@@ -3,8 +3,8 @@
 namespace Database\Seeders;
 
 use App\Models\User;
-use Illuminate\Database\Seeder;
 use Faker\Factory as Faker;
+use Illuminate\Database\Seeder;
 
 class UserSeeder extends Seeder
 {
@@ -21,7 +21,7 @@ class UserSeeder extends Seeder
 
         User::create([
             'username' => 'test',
-            'password' => password_hash('test',PASSWORD_BCRYPT),
+            'password' => password_hash('test', PASSWORD_BCRYPT),
             'fullname' => 'Test User',
             'user_email' => $faker->safeEmail,
             'administrator' => 1,

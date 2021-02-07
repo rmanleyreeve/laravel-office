@@ -48,7 +48,7 @@ class User extends Authenticatable
         'password_reset_token',
     ];
 
-    public $permissions = [];
+    public $permission_array = [];
 
     public $permission_names_array = [];
 

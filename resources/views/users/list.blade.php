@@ -26,7 +26,7 @@
 							<tr>
 								<td>{{ $record->fullname }}</td>
 								<td>{{ $record->username }}</td>
-								<td>{{ ($record->administrator)  ? "All" : $record->permissions }}</td>
+								<td>{{ $record->administrator  ? "All" : $record->permission_list }}</td>
 								<td>{{ $record->last_login }}</td>
 								<td>
 									<div class="form-group">

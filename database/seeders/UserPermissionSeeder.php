@@ -3,8 +3,8 @@
 namespace Database\Seeders;
 
 use App\Models\UserPermission;
-use Illuminate\Database\Seeder;
 use Faker\Factory as Faker;
+use Illuminate\Database\Seeder;
 
 
 class UserPermissionSeeder extends Seeder
@@ -28,7 +28,7 @@ class UserPermissionSeeder extends Seeder
     {
         $faker = Faker::create();
 
-        foreach($this->data as $d) {
+        foreach ($this->data as $d) {
             UserPermission::create([
                 'permission_name' => $d[0],
                 'permission_code' => $d[1],
