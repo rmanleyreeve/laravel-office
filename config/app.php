@@ -44,7 +44,7 @@ return [
     |
     */
 
-    'name' => env('APP_NAME', 'PBNE Homezone App'),
+    'name' => env('APP_NAME', 'Office Attendance System'),
 
     /*
     |--------------------------------------------------------------------------

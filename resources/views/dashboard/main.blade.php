@@ -34,7 +34,7 @@
                                         </td> <td v-else></td>
                                         <td nowrap>
                                             @{{ r.name }}
-                                            <a v-bind:href="'/attendance/day/2021-01-28/'+r.uid+'/view'" role="button" data-toggle="modal" data-target="#bsModal"><i class="fa fa-clock-o" data-toggle="tooltip" data-placement="top" title="View Activity"></i></a>
+                                            <a v-bind:href="'/attendance/day/@php echo date('Y-m-d'); @endphp/'+r.uid+'/view'" role="button" data-toggle="modal" data-target="#bsModal"><i class="fa fa-clock-o" data-toggle="tooltip" data-placement="top" title="View Activity"></i></a>
                                         </td>
                                         <td>@{{ r.role }}</td>
                                         <td v-if="r.activity_log">
